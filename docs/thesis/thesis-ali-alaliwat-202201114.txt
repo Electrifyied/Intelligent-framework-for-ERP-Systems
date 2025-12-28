@@ -1,0 +1,1849 @@
+
+
+
+Intelligent framework for ERP Systems
+
+by
+
+Sayed Hashem Yusuf
+Ali Alalaiwat
+
+
+A Thesis Submitted in
+(Partial) Fulfillment of the
+Requirements for the Degree of
+
+
+
+Bachelor of Technology
+in Information & Communication Technology (MIS)
+
+
+
+
+at
+Bahrain Polytechnic
+December 2025
+
+Copyright
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Declaration
+I hereby declare that this submission is my own work, and to the best of my knowledge and belief, it contains no material previously published or written by another person nor material which to a substantial extent has been accepted for the award of any other degree or diploma of the university or other institute of higher learning, except where due acknowledgment has been made in the text.
+………………………../…………….. Ali Alalaiwat…………................ / 28/12/2025…………
+Signature			name  		 		date: 
+Approval Signatures
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+APPROVED FOR THE ICT PROGRAMME
+
+
+
+________________________________________________
+Cyril Anthoni, 	Thesis Supervisor		Date
+
+
+
+________________________________________________
+Shahnawaz Khan, 	Technical Writing Tutor	Date
+
+Abstract
+
+In practice, ERP systems are only as good and sustainable as their underlying infrastructures and the quality of system administration. Optimization of business processes is discussed in numerous studies, whereas just a few consider infrastructure automation and operational management. This thesis will discuss the production-like design and operation of an ERP infrastructure with strong automation, monitoring, security, and controlled AI-assisted system administration.
+A multi-VM ERP environment was set up using VMware Workstation, segregating the ERP application, database, and automation components onto isolated Windows Server virtual machines. n8n was deployed for workflow-based automation in executing scheduled health checks, logging, reporting, and alerting. Secure external access was ensured with Cloudflare Tunnel without exposure of inbound firewall ports. AI-assisted operations were integrated using MCP and Claude Desktop to allow controlled system and database inspection without autonomous execution.
+Testing and validation confirmed reliable internal connectivity, stable ERP–database integration, successful execution of automation workflows, secure control of access, and effective AI-assisted operational queries. The results show that an infrastructure-first, automation-driven approach can enhance the reliability of ERP operations while maintaining stringent control over system behavior. This work presents a practical, scalable model for managing ERP infrastructure oriented towards SMEs.
+List of abbreviations:
+* AI:	Artificial Intelligence
+* ERP: Enterprise Resource Planning
+* MCP:	Model Context Protocol
+* SQL:	Structured Query Language
+* DB:	Database
+* API:	Application Programming Interface
+* n8n:	Node-based Automation Platform
+* VM:	Virtual Machine
+* CLI:	Command Line Interface
+* SME:	Small and Medium-sized Enterprise
+* UI:	User Interface
+
+
+Keywords: ERP Infrastructure, System Administration, Automation, Monitoring, Logging, AI-Assisted Operations, Model Context Protocol (MCP), n8n, PostgreSQL, Virtualization, Security, Cloudflare Tunnel.
+
+Acknowledgments
+
+I would like to express how grateful I am for having an amazing and helpful project supervisor, and I would like to express my gratitude to Mr. Cyril Anthoni for helping us and guiding us through the entirety of this semester.
+
+I am also grateful to our lecturer Dr. Shahnawaz Khan who was always available whenever we needed any help in the right direction.
+
+I would also like to express my gratitude to Dr. Shahnawaz Khan who taught me everything that I needed to know.
+
+And finally, I would like to also thank my family and friends, and most importantly my colleague and close friend Sayed hashem for believing in me and supporting me whenever I needed any assistance all the while contributing greatly to the project
+
+Table
+Table of contents
+Table of tables	11
+Table of Figures	12
+1.1 Project Rationale (Infrastructure, System Administration, and AI-Assisted Operations)	14
+1.2 Project Objectives (Operations-First)	16
+1.3 Prior Work (System Administration, Automation, and AIOps)	18
+1.4 Proposed Solution	19
+1.4.1 Virtualized Infrastructure Design	20
+1.4.2 ERP Service Framework	20
+1.4.3 Automation and Operations Layer	21
+1.4.4 AI assisted system administration	21
+1.4.5 Security and external access exposure.	22
+1.4.6 detailed project tasks	22
+1.4.7 Summary of the proposed project solution	23
+2. Background	23
+2.1 Introduction	23
+2.2 Related Theory	24
+2.2.2 Isolation of Processes	24
+2.3 Used and considered technology	24
+2.3.1 Virtualization and Operating Systems	25
+2.3.2 ERP and Database Stack	26
+2.3.3 Automation and Containerization	27
+2.3.4 AI and Operations Tools	30
+2.3.5 Scripting, Administration, and Tooling	31
+2.4 Related Work and Literature Review	32
+3. Methodology	35
+3.1.2 Non-Functional Requirements	36
+3.2 Unified Modeling Language in Infrastructure-Oriented System Design	37
+4. Implementation	42
+4.1 Implementation Overview	42
+4.1 Infrastructure Provisioning and Virtual Machine Setup	42
+4.1.1 Installation of the Virtualization Platform	42
+4.1.2 Virtual Machine Creation and Resource Allocation	44
+Guest VM creation and allocation	52
+4.1.4 Internal Network Configuration	56
+ERP server:	59
+4.2.2 ERP Configuration	61
+4.4 Automation and AI Server Implementation	70
+4.4.1 Docker Installation	70
+4.4.2 Deployment of n8n Automation Platform	72
+4.4.3 MCP Server Deployment	76
+4.4.4 AI Integration (Claude Desktop)	83
+4.5 Secure External Access Configuration	85
+4.5.1 Cloudflare Tunnel Setup	85
+4.6 n8n workflow creation	88
+4.7.2 Postgres communication chatbot configuration	100
+5.Testing and Validation (Operations-Focused)	104
+5.1 Test plan	104
+Functional Requirements and Acceptance Test Results	106
+5.1.1 Service Availability Checks	109
+5.2.2 Automation Workflow Execution	115
+5.2.3 Postgres AI Chatbot Testing	119
+5.2.3 MCP Server Operation	126
+5.3 Security and Exposure Validation	127
+5.3.1 Cloudflare Tunnel Validation	127
+6. Discussion	129
+Backup Plan	132
+Future Work and Plan	132
+Reflection on Project Experience and Learning Outcomes	133
+Bahraini Perspectives	134
+LESPI Introduction	135
+Legal Considerations	135
+Ethical Considerations	135
+Social Considerations	136
+Professional Considerations	136
+7. Conclusion	136
+8. References	137
+9.Appendices	138
+Appendix I: System and User Manuals	138
+Appendix III: Detailed System design	142
+Appendix IV: Detailed implementation	142
+
+Table of tables
+Table 1-Technology table	23
+Table 2-technology table 2	24
+Table 3-technology table 3	26
+Table 4-Technology table 4	28
+Table 5-technology table 5	29
+Table 6 - Testing participants	102
+Table 7-Functional Requirements and Acceptance Test	105
+Table 8-Acceptance results	125
+Table 9-Accomplished objectives	128
+
+Table of Figures
+Figure 1 - use case	39
+Figure 2 - deployment diagram	40
+Figure 3 - Sequence diagram	41
+Figure 4 - VMware install	43
+Figure 5 - VMware install 2	43
+Figure 6 - VMware install 3	44
+Figure 7 – VM creation	45
+Figure 8-VM creation 2	46
+Figure 9-VM creation 3	46
+Figure 10-VM creation 4	47
+Figure 11-VM creation 5	48
+Figure 12 - VM creation 6	48
+Figure 13 - VM creation 7	49
+Figure 14 - VM creation 8	50
+Figure 15-VM creation 9	50
+Figure 16 - VM creation 10	51
+Figure 17 - VM creation 11	52
+Figure 18 - VM creation 12	53
+Figure 19 - VM creation 12	54
+Figure 20 - VM creation 13	55
+Figure 21 - Internal Network Configuration	56
+Figure 22 - Internal Network Configuration 2	57
+Figure 23-Internal Network Configuration 3	58
+Figure 24-ERP server (odoo download)	59
+Figure 25-ERP server (odoo download 2)	60
+Figure 26-ERP server (odoo download 3)	61
+Figure 27-ERP Configuration	62
+Figure 28-PostgreSQL download 2	63
+Figure 29-PostgreSQL download 2	64
+Figure 30-PostgreSQL configuration	65
+Figure 31-PostgreSQL configuration 2	65
+Figure 32--PostgreSQL configuration 3	66
+Figure 33--PostgreSQL configuration 3	67
+Figure 34-PostgreSQL configuration 4	67
+Figure 35-PostgreSQL configuration 5	68
+Figure 36-PostgreSQL configuration 6	69
+Figure 37-Docker Installation	70
+Figure 38-Docker logging	71
+Figure 39 - n8n deployment	72
+Figure 40- n8n deployment 2	73
+Figure 41- n8n deployment 3	74
+Figure 42- n8n deployment 4	75
+Figure 43-MCP server deployment	76
+Figure 44-MCP server deployment 2	77
+Figure 45-MCP server deployment 3	78
+Figure 46-MCP server deployment 4	79
+Figure 47-MCP server deployment 5	80
+Figure 48 -MCP server deployment 6	81
+Figure 49-MCP server deployment 7	82
+Figure 50-AI Integration	83
+Figure 51-AI Integration 2	84
+Figure 52-AI Integration 3	84
+Figure 53-Cloudflare setup	85
+Figure 54-Cloudflare setup 2	86
+Figure 55-Cloudflare setup 3	86
+Figure 56-Cloudflare setup 4	86
+Figure 57-Cloudflare setup 5	87
+Figure 58-Monitor/Health check automation	88
+Figure 59-Monitor/Health check automation 2	89
+Figure 60-Monitor/Health check automation 3	90
+Figure 61-Monitor/Health check automation 4	91
+Figure 62-Monitor/Health check automation 5	92
+Figure 63-Monitor/Health check automation 6	93
+Figure 64-Monitor/Health check automation 7	94
+Figure 65-Monitor/Health check automation 8	95
+Figure 66-Monitor/Health check automation API fetching	96
+Figure 67-Monitor/Health check automation 9	97
+Figure 68-Monitor/Health check automation 10	98
+Figure 69-Monitor/Health check automation 11	99
+Figure 70 Postgres communication chatbot	100
+Figure 71-Postgres communication chatbot 2	101
+Figure 72-Postgres communication chatbot 3	102
+Figure 73-Postgres communication chatbot 3	103
+Figure 74-Postgres communication chatbot 4	104
+Figure 75-Odoo testing	109
+Figure 76-Odoo testing 2	110
+Figure 77-Odoo testing 3	111
+Figure 78-Odoo testing with DB 4	112
+Figure 79-Docker MCP testing	113
+Figure 80 - Network connectivity	114
+Figure 81- Network connectivity 2	115
+Figure 82 - Automation Workflow Execution	116
+Figure 83- Automation Workflow Execution 2	116
+Figure 84 - Automation Workflow Execution 3	117
+Figure 85 - Automation Workflow Execution 4	118
+Figure 86 - Automation Workflow Execution 5	118
+Figure 87-PostgreSQL AI chatbot Testing	119
+Figure 88-PostgreSQL AI chatbot Testing 2	120
+Figure 89-User verification	121
+Figure 90-User verification 2	122
+Figure 91-User verification 3	123
+Figure 92-User verification 4	124
+Figure 93-AI limit restriction	125
+Figure 94-MCP server operation	126
+Figure 95-MCP server operation 2	126
+Figure 96 – Cloudflare	127
+Figure 97-n8n credentials selection screen	139
+Figure 98-n8n Workflow selection screen	140
+Figure 99-MCP server runtime in docker	140
+Figure 100-n8n chatbot UI	141
+Figure 101-Chat with PostgreSQL database download	142
+Figure 102-Health and check alert workflow	154
+
+
+
+1.1 Project Rationale (Infrastructure, System Administration, and AI-Assisted Operations)
+ERP systems consist of and most the time are the operational framework which supports and upholds vital business operations that mostly include procurement, sales management, finance, financial accounting, inventory management and control. Many ERP and any ERP related projects or studies mostly focus on functional customization, application design and mostly business process alignment, which are very important but, reliability, security, maintainability and ease of use are often the most under-talked fundamental elements in long term ERP deployment 
+Difficulty to operate, poorly monitored or being exposed to security risks which can easily be configured with minor configurations are base drivers in when an ERP system is perfectly functional, eye catching and correct in business environment yet still fail if it lacks any of these problems mentioned and many similar to it. What these deployments usually lack is automation, operated tooling, proper configuration for ease of use and user friendliness and most importantly continued and structured monitoring to ensure security becomes a massive strength. Most service failures are detected usually mostly after disruptions occur to end users, with also recovery procedures requiring manual intervention from an administrator to troubleshoot without any logs or data to go on besides the end user’s current system, which would require a troubleshooting session to be held to find the issue without any leads to go on. Delayed failure detection heavily impacts business authenticity and user ability to trust and system downtime, and highly dependent systems massively complicate the process of troubleshooting because all the different layers like application, operating system and database system become very hard to navigate through and isolate.
+This project rationale is seeing the ERP system as a requirement that requires continuous operational support and management by treating like a production like service type, system administration and system infrastructure are prioritized in this project including observability, and service maintainability and availability, secure and reliable configuration. An architecture involving multiple VM’s are utilized each with their own use while also ensuring a controlled system operations manager. 
+
+VMware workstation is utilized as the virtualization platform and tool as it provides full reliable local infrastructure reproducibility, realistic and efficient troubleshooting capabilities and full ownership without relying on any cloud SAAS. Enterprises infrastructure principles and important practices will be fully displayed like automation, modular designed systems or servers, organized and systematic operational management by implementing widely used technologies providing widened support all allowed by utilizing this aforementioned approach.
+In traditional ERP environments, administrators repeatedly perform predictable operational activities such as checking service status, verifying network connectivity, restarting failed services, reviewing logs, and compiling incident summaries. Although these tasks are repetitive, they are critical to maintaining system uptime and stability. This project demonstrates how workflow-based automation can transform these manual activities into scheduled, 
+This project will highlight and illustrate how implementing workflow based automation tactics completely transform these previously mentioned repetitive processes into scheduled operational system tasks that routinely and continuously log, monitor and manage all the connected systems, all the while simplifying the process of data fetching, as by incorporating an ai chatbot connected to the Postgres database and data creation with executive actions to create data also given and incorporated to the AI but not giving it full control over the database and system, The ERP system workflow behaves as sort of a self-checking, monitoring and logging system built and infused with an AI to assist and provide tips if there is any discrepancy in the system or a network connection error by listing all troubleshooting capabilities.
+Artificial intelligence is deployed within the operating systems and framework as a guiding and assisting interacting tool aimed to improve efficiency by allowing administrators and users given access to interpret data and operational data, and when given administrative actions, able to execute actions within the DB with the workflow designed for the Postgres DB only to authorized users, to prevent any destructive or malicious behavior and activity.
+
+The aim and focus of this thesis will remain on the efficient, practical and compact implementation of infrastructure with operation automation, and an ERP environment with continued monitoring, logging and defined execution limits.
+
+1.2 Project Objectives (Operations-First)
+The Main and Primary objective of this project is designing and implementing a reliable, effective and efficient ERP infrastructure and framework that accentuates and spotlights automated system administration and logs, maintainability, reliability and a protected service access point.
+
+This project’s intended demonstration is to show that a well-designed ERP system is operable as a seamlessly available and robust service through organized and structured system administration practices, AI enabled operational interface and process driven automation.
+
+
+1.2.1 Infrastructure and Deployment Objectives
+1.implementation of multiple VM ERP infrastructure using VMware Workstation to accomplish a modular architecture system design and managed isolation.
+2.distributing system responsibilities which in turn apply separation of operations and concerns across each labeled and specific VM, consequently simplify troubleshooting and decrease failure coupling
+3.Verify network connectivity throughout all infrastructure and system elements and components, which are verified through ICMP connectivity validation and confirms it is reachable. 
+4.Configured a specific VMnet through NAT so that service dependencies remain consistent, reachable and maintainable.
+
+1.2.2 Availability and Resilience Objectives
+5.System is highly available through automated operational checks and logins rather than opting for manual monitoring.
+
+6.Self checking routines are to be implemented which validate database and ERP service availability and reachability.
+
+
+1.2.3 Automation and Operations Objectives
+7.n8n is utilized to deploy and manage workflows that plan scheduled health checks, automated logging and conversion of human queries to LLM to easily use and fetch DB data.
+8. Docker is used to containerize and also operate any services which support the system in an isolated manner which in turn offers the simplification of redeployment and minimizes configuration drift.
+
+1.2.4 Security and Exposure Objectives
+9. Limit the exposure of databases and any sensitive management components to only the internal services to minimize any data leaks or internet exposed prone attacks.
+10. Usage of Cloudflare tunnel to securely expose only the required services, which leads to less need for any use of configuring inbound firewall rules or openings.
+11. Network isolation is upheld through the internal network by utilizing network interface routing and configuration.
+12. AI driven and supported operational interface is facilitated through the usage of MCP.
+
+1.3 Prior Work (System Administration, Automation, and AIOps)
+
+Prior ERP related system work primarily covers and focuses on optimization of business processes, configuration of end-user interface and basic functional coverage with design aspects, while current and modern ERP related system projects and platforms support and uphold advanced application level workflows, Limited built in support for reporting and infrastructure supervision is provided in many open source ERP deployments. which often leads to availability and reliability being managed through external system administration processes and operations.
+
+
+The best recognized and established methods in infrastructure engineering and management processes majorly focus on early fault detection, organized logging methods and upgoing consistent system monitoring. Enterprise level monitoring platforms are very widely used in large scale system environments, but introduce a certain level of complications and complexity which may overwhelm any SME sized scale systems as a result, SME's call for system solutions which cater to being maintainable, cost efficient and optimal with limited administrative resource deployment, ergo encourage the use and switch to lightweight automation systems and easily scalable infrastructure systems and architectures 
+
+business integration operations like alert management, and data state alignment and syncing all are implemented as workflow automating tools that said, a similar approach can be applied to system administration processes which include automated system alerting, arranged health and connectivity checks with operational logging, making this approach be able to permit administrative routines to be stated as fixed and fully specified transparent workflows, reducing manual interference.
+
+This presented thesis and project aims to follow the principle and task of merging advanced automation workflows with an LLM AI, which consequently allow managed operational data sources interactions, with a defined focus on reporting, logging and database evaluation. Recent studies and efforts in any AIOps demonstrate how AI can revolutionize in helping to make sense of system specific monitoring and operational data, assisting heavily with troubleshooting and offering clear summaries of system status. The only well known and majorly discussed issue in this field is the risk that comes with giving AI unrestricted control over the entirety of the system.
+
+
+This project will demonstrate and show that ERP systems and deployments can and should improve clear operations, and operational and administrative performance through the implementation of scalable infrastructure design, and consistent system administration operations and processes. The problem and gap this project aims to address and fix is the implementation of a practical workflow driven application which consists of logging, monitoring, alerting and operational data retrieval and query with AI assistance, in a real world production-like simulated ERP environment by using available and accessible technologies, instead of emulating any large scale complex enterprise monitoring systems.
+1.4 Proposed Solution
+The provided solution primarily focuses on the modeling and implementing of an ERP infrastructure system handled and coordinated through organized workflow process based automation, system administration processes and practices, with the involvement of AI supported system/service interaction. This solution handles the ERP system environment as a system that is constantly running that demands transparency, managed and upheld regular monitoring and reliable upkept administrative access and support.
+
+The solution is ordered and structured into a multi layered architecture framework which encompasses four separated but connected servers with their own specific purpose and responsibility. together, these layers create and form an integrated and coherent infrastructure that simplifies system administration and maintainability while also, supporting steady and consistent ERP processes without any dependency on complex monitoring systems.
+
+1.4.1 Virtualized Infrastructure Design
+The basis and framework of this proposed project solution is preparing and deploying multiple virtual machines to form a virtualized infrastructure. The presented infrastructure design carries a separation of risks and concern which reflects common enterprise deployment practices, the key features and attributes of the infrastructure layer include:
+
+1.Managed and controlled resource allocation preventing any type of resource conflict.
+2.Each virtual machine with its unique purpose and specifications for every service used.
+3.Full infrastructure ownership with a private internal network, permitting secure internal network communication and effective system administration and troubleshooting, as this approach massively simplifies maintenance and improves fault isolation.
+
+
+
+1.4.2 ERP Service Framework
+The ERP layer includes an Odoo Server and with it, its own dedicated and connected PostgreSQL DB server, both deployed on separate servers(VM's) but connected nonetheless, the separation between these two servers allows for more security, reliability and more independent service. These subsequent principles are followed when designing the ERP service architecture:
+1.Access to the DB is restricted only to authorized hosts.
+2.The configuration of these aforementioned services are consistent and clear, which greatly aid disaster recovery and support maintainability by setting apart data storage from application service logic thereby, making this solution effective in reducing failure dependency and enabling specific targeted troubleshooting. 
+
+
+
+
+1.4.3 Automation and Operations Layer
+To reduce manual administrative effort and improve operational resilience, the proposed solution introduces a dedicated automation and operations layer. This layer is responsible for continuous system verification and recovery actions.
+The automation layer provides:
+•	Scheduled health checks for ERP availability, database reachability, and infrastructure status
+•	Automated recovery actions such as service restarts and container restarts
+•	Structured logging of operational events, failures, and recovery actions
+•	Periodic operational summaries documenting system health and uptime
+Workflow-based automation ensures that operational routines are deterministic, auditable, and repeatable, transforming system administration from a reactive process into a proactive operational model.
+
+
+
+
+1.4.4 AI assisted system administration 
+
+The integration of AI in the proposed system architecture is to be used as a functional automated support system as AI aided interactions with the appropriate context is applied to optimize and enhance administrator availability and efficiency. In this provided model:
+
+1.Executable actions are predefined in the automation workflows.
+2.Functional and operational data interpretation and system querying is both done by AI in the system.
+3.Access control and functional policies define the decision and execution authority in the system, which therefore enables the safe and practical usage of AI in maintaining traceability, security and monitoring in system administration standards.
+
+
+
+
+1.4.5 Security and external access exposure.
+This proposed solution aims to implement a controlled and managed external access point which is provided through a secure method of routing and tunneling instead of full on direct exposure of the internal data infrastructure causing massive data leaks.
+This design practice makes sure that:
+1.Private and internal business servers and services remain inaccessible from unauthorized users or the internet.
+2.A single controlled entry point is configured to manage external access.
+This approach makes this solution achieve both security and availability.
+	
+
+
+1.4.6 detailed project tasks
+starting with:
+1.evaluate and assess all the infrastructure needs, prerequisites, system requirements and failure risks.
+2.Develop and design a production focused multiple VM framework each with clear specifications and component functional separation.
+3.Creation and configuration of VM's with their installed operating systems and internal networking and communication configured.
+4.Install Odoo and PostgreSQL each on their own server.
+5.configuration of Odoo and PostgreSQL to allow for constant, isolated and secure connection between the two services.
+6.Plan and develop a functional automation workflow
+7.Installing docker, n8n and Claude Desktop on their own specific server, and configured with credentials created.
+8.Configuration of an MCP server in the AI/Docker server for managed system administration interaction.
+9.implement the automation workflows in n8n and configure each node with the requested credentials.
+10.implement any AI supported and assisted operations through restricted administrative access.
+11.perform testing to make sure that the system works as intended.
+12.document all the results and findings.
+
+1.4.7 Summary of the proposed project solution
+This Project aims to show and demonstrate how a well designed ERP system can be function as maintainable, resilient and a secure service when infrastructure design is planned to adapt automation and any controlled and carefully managed AI aided system operations, This system solution aims to be a scalable and realistic model for ERP implementation in SME environments because it realigns system management from manual interference towards preplanned and structured functional operational processes.
+
+2. Background
+2.1 Introduction
+Modern ERP solutions and systems currently operate more frequently as distributed environments that rely on multiple services that support it and that includes, databases, automation tools, servers and any internal networks in comparison to older ERP systems which were deployed as standalone systems that needed to be built piece by piece often making it overwhelming to handle for any SME environments. In result, the availability and consistency of an ERP system really depends on it's operational tools and infrastructure deployment and design. System administration in SME environments often struggle with manual monitoring, troubleshooting and maintenance, leading to delayed issue detection and inconsistent system behavior.
+
+This project aims to address these issues and problems by implementing AI and automation to solve these aforementioned issues to create a secure, reliable and convenient ERP environment.
+2.2 Related Theory
+2.2.1 Infrastructure Isolation and virtualization
+Multiple isolation operating system environments are expected to operate on a local physical hardware CPU. 
+VMware virtualization in ERP system design supports:
+1.Fault isolation and role specification and separation
+2.Controlled and managed resource CPU and memory allocation.
+3.Environments reproduce ability.
+VM based system isolation is very important and beneficial to ERP systems, as other services like for example databases and application systems should not be competing for system resources as it will damage the systems performance capabilities.
+
+2.2.2 Isolation of Processes
+Isolation of system processes reduces complexity by specifying direct responsibilities to each individual feature and components.
+This principle is used in ERP infrastructure in:
+1.separation of data storage from application logic and also production services and operational tooling.
+2.public internet facing services isolated from private internal business services.
+This applies isolation and separation of concerns at the service and VM levels
+
+2.3 Used and considered technology
+These presented technologies were all used to implement and configure the system, they were all selected based on careful research and their relevance to real world ERP and system administration environments:
+2.3.1 Virtualization and Operating Systems
+TechnologyPurpose & Use-caseVMware Workstation 25H2
+VMware Workstation is a very effective desktop virtualization platform that allows you to run multiple virtual machines on a single computer utilizing all its resources effectively and smartly. Developers, IT professionals and System administrators mostly use it to simulate a real-life working environment without any of the actual risks involved, most uses include safely testing software’s, simulating networks without the hardware components needed. It was used to host The ERP Infrastructure with all the supporting services.
+Windows Server 2022:
+A Microsoft Operating system that is mainly designed to manage applications, infrastructures, and networks with advanced features in security and improved support for virtualization, which make it an excellent choice for enterprise data loads.
+Windows Server 2025
+A Microsoft Operating system which improves on its predecessor in security and performance but it’s very heavy to load as it requires more resources, it was used in the docker server because docker works best on windows server 2025.
+Windows 11(Client/Cloudflare testing):
+Microsoft improved modern operating system which offers a fresh and new design for end users, with improved performance and better security than its predecessors, which make it an excellent choice to verify network testing and verify connection.
+Table 1-Technology table
+2.3.2 ERP and Database Stack
+
+TechnologyPurpose & Use-CaseOdoo Community (Version 19)
+Odoo Community serves as the ERP application layer inside the framework, it is deployed to a separate server which is then configured to its own PostgreSQL database. The community edition was selected to guarantee open source compatibility, as it permits internal networking, monitoring and implementing automation workflows without having to adjust or tamper with any business logic or ERP core codes.PostgreSQL (Version 18.1)
+
+Aims to serve as a dedicated linked database Coordination and management systems for the ERP system environment, created and deployed on a separate server validating secure connectivity and controlled database access with authorized use.PgAdmin
+
+Used as  GUI to monitor and contains all the SQL queries in easier Graphical form and used to provide an easier and more user friendly approach .Table 2-technology table 2
+
+2.3.3 Automation and Containerization
+TechnologyPurpose & Use-CaseDocker (v29.1.3)
+Purpose is used to containerize any selected services to streamline and simplify deployment, isolate different components. Docker was used because of its ability to containerize and run MCP server and as it docker is the only product which supports it.n8n (0.228.1)
+Automation tool that operates based on created and designed workflows and business processes like notifications, alerts and executing actions in a scheduled manner. n8n behaves and operates as the center operational control plane. It executes predefined workflows that manually check or query the systemNode JS
+Node JS is used to support execution of server side automation services and is used for providing extensible tools for n8n within the infrastructure.PowerShell
+Scripting configuration and task automation used for administration tasks, diagnostics and creating docker imagesNPM
+
+This package management system is used to install and manage any Node.js dependencies that are required in automation and workflow services in the infrastructureWSL/WSL2
+Layer used to run any Linux based tools and containers within a windows environment, enabling scripting, docker operations without actually requiring a dedicated Linux virtual machine.Table 3-technology table 3
+
+
+
+
+2.3.4 AI and Operations Tools
+
+
+MCP
+MCP server that is used as a mediator and controlled interface between AI models and automation workflows, which enables structured, database interactions while preventing any unrestricted execution of commands.Claude Desktop (Claude Opus 4.5)
+This AI assistant is used for analysis and to initiate a connection between docker and MCP server, and it also behaves as an MCP client.Docker MCP client configurator
+This Docker based client configurator used  to deploy, and manage MCP client settings enabling controlled integration between automation workflows and AI services.Cloudflare
+Cloudflare Tunnel was used to securely expose internal services to the internet without opening inbound firewall ports, providing encrypted access while maintaining strict control over external connectivity.Table 4-Technology table 4
+
+
+
+
+
+
+2.3.5 Scripting, Administration, and Tooling
+Technology Purpose & Use-CasePython (3.14)
+General purpose language used to automate scripts, service integration and auxiliary tooling within the infrastructure.YAML (1.2)
+Human Readable configuration format that is used to define automation service, workflows and container settings, and any reproducible infrastructure management.JSON (2020-13)
+A very lightweight data format  used for configuration files, communication, and any structured data exchange between automation components and services inside the infrastructure.Table 5-technology table 5
+ 
+
+2.4 Related Work and Literature Review
+
+Previous research on ERP and enterprise system deployments majorly focused on business process optimization and also application performance, all the while infrastructure operational flow, management and design were mostly addressed indirectly, Most studies conducted in system administration and DevOps mostly bring attention to the role of monitoring, automation and logging in improving the system and service fault detection, availability and operational efficiency in robust and complex application environments(Kim et al., 2016; Debois, 2019).
+
+Recent research into AIOps looks into the uses of AI to aid and assist operators in securely monitoring system health, supporting troubleshooting activities and closely analyzing logs in service oriented and distributed system architectures. Nonetheless, currently existing methods and approaches mostly assume autonomous remediation systems or cloud native environments, which may introduce major operational risks if not carefully configured to match the system's needs (Dang et al., 2019)
+
+Limited work and research address the practical interconnection of infrastructure automation and AI aided administration in system administration in both an on premises and simulated environment. Most studies that exist currently either cater to focusing on larger, robust enterprise autonomous AI systems or monitoring stacks, which leaves an empty gap in any research on finding a smaller, lightweight AI powered and assisted operational models that are more suited to be implemented to SME organizations.
+
+
+AI for Observability and Operational Data Access
+The complexity of accessing and the interpretation of functional operational data is the key challenge in infrastructure administration as it is stored in low level data sources, such as monitoring databases and system logs. Research heavily points to the fact that AI LLMs and AI systems are very capable of handling, querying infrastructure data which in result, greatly reduce cognitive and analytical workload for system administrators (Alvarez and Kim, 2024)
+AI assisted Interfaces are capable of translating high-level operational data and questions into organized queries unlike traditional dashboards which require thorough system knowledge and preset queries. This exact capability is especially useful for environments where infrastructure data is distributed and isolated across different servers and schema.
+
+
+
+
+Cloud-Based ERP Infrastructure (AWS / Microsoft Azure)
+Cloud platforms like Amazon Web Services and Microsoft Azure provide services for virtual machines, networking, databases and allow for rapid deployment with scalability (Amazon Web Services, 2024; Microsoft Azure, 2024). But, despite all these aforementioned advantages, The primary objective that was set was to design and manage a locally contained infrastructure without any reliance on any cloud subscription services, A virtualized on-prem infrastructure was preferred to have full control over security, networking and system behavior and because there was more than enough local hardware resources, it was the approach taken.
+
+SAP ERP and Integrated AI Platforms
+One of the most established ERP providers is SAP which offers highly system integrated business platforms that combine AI assisted features like SAP Joule and its advanced automation. They are designed to support robust and large-scale infrastructure and enterprises with strict compliance needs and very complicated and deeply integrated workflows. (SAP SE, 2024). Despite the advantages, SAP was not appropriate for this project due to its expensive licensing's, high complexity and also the closely integrated nature would limit flexibility, making it less suitable for an academic study focused approach on controlled AI aided operations and infrastructure automation
+
+Enterprise Monitoring and AIOps Platforms
+
+Robust and highly scalable Enterprise grade monitoring and AIOps like Splunk offer advanced and complex capabilities for metric analysis, fault and anomaly detection and also any AI assisted functional insights. (Datadog, 2024; Splunk Inc., 2024). Despite all these benefits and strengths, it was not implemented due to its intricate system design and high licensing costs. This project favors lightweight and transparent configuration that is easy to understand and straightforward to maintain in SME ERP infrastructures, which align with the project's goals.
+
+3. Methodology
+The functional requirements define what the system must be capable of doing from an operational and administrative perspective.
+1.Isolated, well responsive and reliable database connectivity:
+The ERP server must upkeep consistent and reliable connectivity to its dedicated PostgreSQL database, with database authorization given only to selected authorized users.
+2.ERP server and service full-time availability:
+The ERP system must be accessible during all operations unless intentionally shut down.
+3.Automation of Health verification and system checking:
+The system should be capable of automating verification of system and system health.
+4.Scheduled automation execution:
+automation of the workflows must execute on a predefined, fixed schedule without needing manual trigging.
+5.AI aided controlled system interaction
+The AI system must not be given unrestricted control or access to the system and should be limited pre-set administrative operations.
+6.Continuous System status notification and reporting:
+The designed automation workflows should be able to generate and provide system reports at the set intervals, despite whether failures are detected or not. This ensures consistent and clear visibility during all times of operation.
+7.User friendly administrative interface:
+A low level complexity system with an understandable UI must be provided to system administrators to be able to query system state and request any predefined actions through the LLM
+8.External accessibility security:
+The ERP server and system must be accessible through a secure access method without direct exposing of internal infrastructure parts.
+
+
+3.1.2 Non-Functional Requirements
+The non-functional requirements define the quality attributes of the system, focusing on how the system operates rather than what it does.
+
+1. System resilience
+Individual component failure without total service disruption must be tolerated by the system, made possible by the isolation of servers and modular system design
+2.Reproduceability:
+The automation workflow setup, and infrastructure components should be easily deployed in a repeatable manner using preconfigured documented configuration and containerized processes and services.
+3.Scalability of the system:
+The system should be able to support the inclusion of added automation workflows, monitoring checks, and query fetching without needing architectural framework redesign.
+4.Maintainability:
+All the system configurations should be transparent, readable and reproducible for future deployment and allow for further modification and extension of the system by system administrators without any extensive complexity.
+5.Highly available:
+The system should be able to minimize any sort of downtime through continuous automated system monitoring and logging.
+6.Fault isolation:
+Any failure in one system or server must not uncontrollably spread to any other component.
+7. Logging transparency:
+behavior of the operational system through be displayed clearly downloadable logs and execution histories, which ease administrative review and post-accident analysis.
+8. Predictable behavior pattern:
+The system automation should not be performing any uncontrollable or unpredictable destructive actions.
+
+
+
+3.2 Unified Modeling Language in Infrastructure-Oriented System Design
+UML is a modeling language that is majorly used to visualize, describe and document complicated and intricate systems. Its structured notation is just as usable to system administration and infrastructure engineering, where interaction flows, deployment boundaries and component administration is key and very critical to the functional operation flow. In this proposed project context UML is used to present the fully designed operational framework and system architecture of the ERP infrastructure. This approach improves reproducibility, maintainability, predictability, and auditability by providing a clear concise understanding and representation how the architecture will operate. The selected UML diagrams will allow the reader to comprehend and easily understand how the automation workflows, system administrator and any AI assisted interfaces interact within the infrastructure.
+
+A layered system architecture design was followed:
+Infra Layer: Virtual machine deployment and configuration with networking connectivity.
+Service layer: PostgreSQL and Odoo configuration
+AI interface layer: Claude and MCP
+Automation layer: Docker containers and services, n8n workflows.
+
+Assigning specific roles to VM's:
+ERP Server VM: Contains Odoo application configured to operate
+Database Server VM: PostgreSQL configuration to operate 
+ai/n8n server VM: n8n and docker with an internal docker MCP server container configured.
+Client VM: to verify system access and connectivity.
+
+UML Diagrams Used in This Work
+Role of UML in the Proposed Infrastructure
+By combining structural and behavioral UML diagrams, this thesis provides a comprehensive view of how infrastructure automation and AI-assisted operations are implemented in a controlled and production-oriented manner. The diagrams serve not only as documentation artifacts but also as design tools that support system validation, operational reasoning, and long-term maintainability.
+
+Use Case Diagram:
+Illustrate operational responsibilities and interactions from a system administration perspective. It defines who initiates infrastructure actions (administrator, automation engine, AI assistant) and what operational goals are supported, such as provisioning, monitoring, recovery, and secure exposure.
+
+Figure 1 - use case
+This presented diagram displays how the ERP system is configured and set up, A system administrator installs the carefully configures the infrastructure, ERP application, database and networking and each configured with their own security. Cloudflare is utilized to provide secure access to external sources. Automating tools are used to query data and automate logs and system health checks.
+
+Deployment diagram
+The deployment diagram explains the physical distributing of specified services, it highlights internal only components, trusted boundaries and the controlled exposure through the Cloudflare tunnel, security support and reproducibility analysis.
+
+
+Figure 2 - deployment diagram
+This deployment diagram shows a windows based deployment framework where an ERP system runs inside separately isolated virtual machines on downloaded and configured VMware Workstation host. The automating server runs the Claude AI Desktop with its MCP tools inside the docker containers to implement and execute predefined perform health checks, manage database operations and administrative actions. Cloudflare provides secure access to external sources through tunnel connections for the automated server and UI only access to client viewers. The database and ERP servers communicate internally while the automation layer executes operational scripts, queries data and gathers and generates logs
+
+
+Sequence Diagram
+Illustrates a time orderly fashioned interaction between automating different components during workflows. It's used to demonstrate how scheduled system validation, health checks, and reporting are executed.
+
+Figure 3 - Sequence diagram
+This presented sequence diagram demonstrates automation of health checking that runs every 30 minutes  via an n8n scheduler, this workflow automatically verifies ERP service availability through HTTP checks, and validates database connectivity with lightweight queries and all the while confirms docker status for MCP services. The system logs operational and functional records and also delivers status reports upon successful verification.
+
+
+
+
+
+
+
+
+4. Implementation
+4.1 Implementation Overview
+
+The system is implemented using multi VM windows server based virtual machines on the installed VMware workstation which provides full control over networking, configuration and failure scenarios, the core servers include the ERP server, database server, AI/n8n automation server that were deployed separately to improve reliability and maintainability to apply separation of responsibilities.
+Scheduled workflows were used for automation a well as manual triggers that consistently monitor system health, translate human queries into SQL queries fetching data and executing predefined actions when required, and generating operational logs, AI assistance was merged and integrated to be used as a controlled operational tool through MCP interface. Internal networking is configured to allow only authorized access to important confidential services through a configured Cloudflare tunnel.
+4.1 Infrastructure Provisioning and Virtual Machine Setup
+4.1.1 Installation of the Virtualization Platform
+
+
+Figure 4 - VMware install
+
+
+Figure 5 - VMware install 2
+The figures above show the steps to the installation of VMware Workstation and running the application.
+
+4.1.2 Virtual Machine Creation and Resource Allocation
+ERP server creation and storage allocation
+
+Figure 6 - VMware install 3
+
+
+
+
+
+
+
+
+
+The figures above display the configuration like:
+ 1.hard disk 
+2.processor 
+3.memory
+4.CD/DVD (ISO input).
+
+
+Figure 7 – VM creation
+
+Figure 8-VM creation 2
+
+Figure 9-VM creation 3
+Justification for allocating resources:
+40GB hard disk
+8GB memory
+4 processors 
+allocated to the ERP server because Odoo community is very demanding as well as to keep system running smoothly without any interruptions.
+
+Database server creation and allocation
+
+Figure 10-VM creation 4
+
+
+Figure 11-VM creation 5
+
+Figure 12 - VM creation 6
+
+Figure 13 - VM creation 7
+Justification for allocating resources:
+20GB hard disk
+8GB memory
+4 processors 
+allocated to the Database server because PostgreSQL does not require much resources to function smoothly as well as this server will only have the database to store.
+
+AI/n8n server creation and allocation
+
+
+Figure 14 - VM creation 8
+
+Figure 15-VM creation 9
+
+
+
+Figure 16 - VM creation 10
+Justification for allocating resources:
+60GB hard disk
+8GB memory
+4 processors 
+allocated to the Ai/n8n server because multiple applications and workflows will run on it like docker, n8n,n8n automation workflows and dependencies with packages like NPM and Nodejs.
+
+Guest VM creation and allocation
+
+Figure 17 - VM creation 11
+
+
+Figure 18 - VM creation 12
+
+
+Figure 19 - VM creation 12
+
+
+Figure 20 - VM creation 13
+Justification for allocating resources:
+15GB hard disk
+4GB memory
+2 processors 
+allocated to guest server because it will only be used for verification purposes and much resources isn’t needed as the operating system implemented is also lightweight.
+
+
+4.1.4 Internal Network Configuration
+
+Figure 21 - Internal Network Configuration
+The above figure shows the network configuration in all the deployed VMs and as displayed a custom VMnet (VMnet8) which also uses NAT to share my own local device IP address to split between the devices and is made to link connectivity between all the VM’s.
+
+Figure 22 - Internal Network Configuration 2
+Firewall is disabled In all the VM’s to allow for successful pinging and communication between VM’s
+
+Figure 23-Internal Network Configuration 3
+Above figure shows successful pinging
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ERP server:
+
+Figure 24-ERP server (odoo download)
+
+Figure 25-ERP server (odoo download 2)
+
+Figure 26-ERP server (odoo download 3)
+Above figures demonstrate step by step installation to Odoo community without PostgreSQL database installed.
+4.2.2 ERP Configuration
+
+
+Figure 27-ERP Configuration
+
+Configuring the odoo.conf file to point towards and connect to the database server
+What exactly was changed:
+Db_host =  192.168.233.134
+Db_port = 5432
+Db_password = openpgpwd
+Db_user = openpg
+
+
+
+
+4.3 Database Server Implementation (PostgreSQL)
+4.3.1 Database download and configuration/connection
+
+Figure 28-PostgreSQL download 2
+
+
+Figure 29-PostgreSQL download 2
+The images above show the steps to downloading and running PostgreSQL with pgAdmin.
+
+
+Figure 30-PostgreSQL configuration
+
+
+Figure 31-PostgreSQL configuration 2
+
+
+Figure 32--PostgreSQL configuration 3
+
+
+
+Figure 33--PostgreSQL configuration 3
+
+
+Figure 34-PostgreSQL configuration 4
+
+A postgreSQL server and user is configured with credentials:
+User:openpg 
+Password:openpgpwd
+
+Figure 35-PostgreSQL configuration 5
+The above figure shows the pg_hba file being configured to allow the database to accept connections from external servers.
+
+
+Figure 36-PostgreSQL configuration 6
+This figure shows the server connected to the odoo server as the database “erpeee” is made.
+
+4.4 Automation and AI Server Implementation
+4.4.1 Docker Installation
+
+Figure 37-Docker Installation
+
+Figure 38-Docker logging
+Above images display docker being  downloaded and logged into.
+4.4.2 Deployment of n8n Automation Platform
+
+Figure 39 - n8n deployment
+As being shown in the PowerShell window in the upper image, npm and NodeJS were installed and their versions displayed to allow for n8n installment on the AI/n8n server.
+
+Figure 40- n8n deployment 2
+This figure confirms the installation of n8n in the server.
+
+Figure 41- n8n deployment 3
+
+Figure 42- n8n deployment 4
+As shown, an n8n account has been created with the credentials displayed operating the localhost:5678.
+4.4.3 MCP Server Deployment
+
+Figure 43-MCP server deployment
+MCP server is downloaded on the local device as multiple python files with a couple of docker files and YML files.
+
+Figure 44-MCP server deployment 2
+
+Figure 45-MCP server deployment 3
+The shared folders option was utilized in the upper images to allow the mcp file to be shared from the local device to the ai/n8n server to deploy on the mcp server feature on docker as seen in the second image showing the “enable docker MCP toolkit” to allow for deployment.
+
+Figure 46-MCP server deployment 4
+After the docker MCP file is shared and opened on the n8n/ai server, the docker.compose.yml file is configured with these following lines changed:
+ODOO_URL=http://192.168.233.133:8069/
+ODOO_DB=erpeeee
+ODOO_USERNAME=My personal logged in email
+ODOO=API_KEY=pguserpwd
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure 47-MCP server deployment 5
+MCP client toolkit allows for many applications to connect and use the MCP server when configured, Claude desktop was found to be the most fitting and appropriate choice to be used and was connected through docker easily.
+
+
+
+
+
+
+
+
+
+
+
+To create a docker image file on the previously downloaded and configured MCP files the command docker build -t odoo-mcp-server-copy-mcp-server-1 and as shown the mcp server is running and fully operational
+
+
+
+Figure 49-MCP server deployment 7
+MCP server fully running and operational as displayed in the container tab in docker.
+4.4.4 AI Integration (Claude Desktop)
+
+Figure 50-AI Integration
+
+Figure 51-AI Integration 2
+
+Figure 52-AI Integration 3
+Claude desktop is configured as shown In the upper figures to allow for proper connection to the MCP server for future use.
+
+
+
+4.5 Secure External Access Configuration
+4.5.1 Cloudflare Tunnel Setup
+
+Figure 53-Cloudflare setup
+
+Figure 54-Cloudflare setup 2
+
+Figure 55-Cloudflare setup 3
+
+Figure 56-Cloudflare setup 4
+
+Figure 57-Cloudflare setup 5
+
+
+
+4.6 n8n workflow creation
+
+Figure 58-Monitor/Health check automation
+
+
+Figure 59-Monitor/Health check automation 2
+A new workflow was created and a PostgreSQL node was added with the credentials of the aforementioned PostgreSQL DB.
+
+Figure 60-Monitor/Health check automation 3
+
+
+Figure 61-Monitor/Health check automation 4
+In the upper two images a webhook node was added with the method GET and configured with the IP’s of the Odoo server and the MCP server to allow for health checking and system monitoring.
+
+
+Figure 62-Monitor/Health check automation 5
+
+
+Figure 63-Monitor/Health check automation 6
+An OpenAI LLM was used in the workflow to comprehend the commands and execute tasks intelligently and connected through inputting the OpenAI API key.
+
+
+Figure 64-Monitor/Health check automation 7
+An AI agent node is properly configured with the chat model LLM (OpenAI) with the proper prompt configured so the AI fully comprehends and understands its task.
+
+Figure 65-Monitor/Health check automation 8
+Three conditions were set in alert required as if these don’t match it escalates and moves to informing administrators and higher ups.
+
+
+
+Figure 66-Monitor/Health check automation API fetching
+
+
+Figure 67-Monitor/Health check automation 9
+
+
+Figure 68-Monitor/Health check automation 10
+In order to properly connect the Gmail node to allow for automatic emailing for escalation, a Gmail Api key was needed with the proper credentials and client secret password which was needed to be set on my main account for testing.
+
+
+Figure 69-Monitor/Health check automation 11
+This figure above shows the Alert and monitoring workflow fully designed and configured.
+
+
+4.7.2 Postgres communication chatbot configuration
+
+Figure 70 Postgres communication chatbot
+
+In this Image, another workflow is made and an AI agent node is inputted with the same credentials as before and a message is typed in the chatbot and is processed on the left with the name “chatInput” and in order for the chatbot to understand the prompt, the human query is converted to Json format so the AI LLM queries and translates the Json into SQL format for database data fetching and action executing.
+
+Figure 71-Postgres communication chatbot 2
+
+
+
+Figure 72-Postgres communication chatbot 3
+
+Figure 73-Postgres communication chatbot 3
+
+Three PostgreSQL nodes were added and configured with the SQL query codes and the description shown in the upper three images and those functions fetch:
+1.Table definition
+2.Getting DB schema and Tables list
+3.Execute SQL query
+In the given example I asked the AI chatbot if ali alaliwat existed in the database as seen in figure ##.
+
+
+Figure 74-Postgres communication chatbot 4
+And finally, this presented image shows the created workflow’s design with an inputted chat history to remember previous human queries.
+
+5.Testing and Validation (Operations-Focused)
+5.1 Test plan
+The conduction of the testing process followed a certain laid out structure to validate the proper and functional operation of ERP infrastructure, AI assisted system administration features, automation workflows and LLM AI chatbot querying. This test plan was designed to mirror and reflect practical and realistic system administration practices to guarantee that all mentioned core system components work correctly as intended.
+These following steps were followed during the testing phase:
+1.Confirm and verify that all are VM's are properly configured and verify that they are powered on and connected to the internal virtual network and confirm connectivity between them.
+2.Confirm and verify that core servers and services are running and operational after previously shown configuration and implementation.
+3.Test and confirm workflow validity and observe successful execution.
+4.Verification of the AI LLM Chatbot workflow successful query and data retrieval from the PostgreSQL database.
+5.Make sure that the Alert/monitor workflow has downloadable logs and reports.
+
+
+
+
+
+Participants:
+
+IDNameAgeBackground1Ali Alaliwat21ICT MIS student and system infrastructure engineer for the project, responsible for deployment planning, system administration, containerization, service handling, and infrastructure-related validation.2Sayed Hashem Yusuf
+21ICT MIS student and responsible for system architecture design, AI integration, Python interface development, n8n workflow implementation, ERP integration, and testing activities.
+Table 6 - Testing participants
+Functional Requirements cases and results:
+
+Functional test cases are designed to verify and ensure that system elements function according to the already defined system infrastructure requirements and plan. These test cases presented plainly focus on ensuring that system services are correctly deployed, configured, monitored, interconnected and also how these systems behave under normal operating conditions. The results of these tests are presented in the following table with their corresponding use cases.
+
+
+
+
+Functional Requirements and Acceptance Test Results
+
+Test IDFunctional RequirementTest Description and expected resultActual ResultStatus1Interconnected Internal networkingThe system must be able to provide reliable seamless internal connection between VM'sAll VM's and internal services are able to communicate successfully 
+passedPass2ERP-DB integrationThe ERP server should be able to connect to the external DB serverOdoo successfully connects to PostgreSQL through configuration on both servers.Pass3Separate Database accessThe database must not be publicly exposed should be accessible only from authorized devicesPostgreSQL is only reachable from the ERP server as its the only server that is directly configured to it.Pass4Multi-VM ERP system Deployment:Multiple VMs must be deployed each with their own specific components, systems and applications with their own separate configurations on each.Each VM (ERP, DB, AI, Client) run on their own dedicated server VM's with internal connectivity.Pass5Scheduled health monitoringThe system must be able to perform health checks in a preset amount of time automaticallyThe workflow execute on a fixed schedule and provide a complete log without any manual intervention neededPass6Consistent status reportingThe system must be generating logs even when the system is operational and no failures are detected.Each automation whether manual or automatically scheduled produces a status log to download regardless of the system state.Pass7Automation platform deploying:The system must include an automation platform for functional and operational workflows.Deployment of n8n is successful and operational on ai/n8n server.Pass8AI system queryingThe system must be configured to allow AI to query and fetch database information through given interfaces.AI can successfully retrieve database information through MCP and can be fetched on the n8n openAI chatbot provided on n8n.Pass9AI restriction executionAI must not be given full access to execute unrestricted arbitrary commands in the systemAI limits and restrictions are predefined in the workflows.Pass10Secure external accessExternal access must be provided without any needed configuration of opening inbound firewall portsCloudflare tunnel provides access to n8n and no direct inbound ports are exposed.PassTable 7-Functional Requirements and Acceptance Test
+5.1.1 Service Availability Checks
+
+Figure 75-Odoo testing
+
+
+Figure 76-Odoo testing 2
+
+
+Figure 77-Odoo testing 3
+Confirmation of Odoo community working as intended as I created and displayed my account.
+
+
+
+
+
+
+
+
+
+Figure 78-Odoo testing with DB 4
+Confirmation of the DB connected to the ERP server working as intended as shown by the “erpeeee” DB and some activity shown on the server based on the right graphs.
+
+Figure 79-Docker MCP testing
+Confirmation of Docker working as intended and running the Odoo MCP server as intended with minimal CPU usage.
+5.2 Functional and Operational Testing
+5.2.1 Core Service Availability
+
+Figure 80 - Network connectivity
+
+Figure 81- Network connectivity 2
+Confirmation and showing every device is able to be pinged from the client device VM.
+
+5.2.2 Automation Workflow Execution
+
+
+Figure 82 - Automation Workflow Execution
+
+
+Figure 83- Automation Workflow Execution 2
+In the two upper displayed images, the health check automation workflow is manually executed from the “execute workflow” button and a file is provided to view or download with the logs displayed.
+
+Disconnecting MCP server to test troubleshooting capabilities 
+
+Figure 84 - Automation Workflow Execution 3
+
+
+
+Figure 85 - Automation Workflow Execution 4
+
+
+
+Figure 86 - Automation Workflow Execution 5
+The three upper images display what happens when I manually disconnect one of the servers (in this case the MCP server) and in the logs, the AI caught no logs so it tried troubleshooting and giving tips on how to fix the issue.
+5.2.3 Postgres AI Chatbot Testing
+
+Figure 87-PostgreSQL AI chatbot Testing
+
+
+Figure 88-PostgreSQL AI chatbot Testing 2
+In these two provided images, I asked the chatbot to list all the tables in the database currently and it listed every single one  accurately, which shows it has been configured properly, and did all in a short amount of time (4.231 seconds).
+
+User verification 
+
+Figure 89-User verification
+
+Figure 90-User verification 2
+
+Figure 91-User verification 3
+The AI was asked here to verify of the user “Sayed Hashem Yusuf” is in users and with extensive checking it did not find one and offered to create a user with that name, and successfully creates one.
+
+Add user creation
+Chat memory
+
+Figure 92-User verification 4
+
+Based on the node chat history it has been configured to allow for the AI to remember more than just session data and also provides an option to reuse your commands and used also if you cant remember the commands that were queried.
+
+Figure 93-AI limit restriction
+
+In this Image, the AI was asked if it can delete anything in the system and according to the predefined limitations set, it responded accordingly.
+
+
+
+
+
+
+
+
+5.2.3 MCP Server Operation
+
+Figure 94-MCP server operation
+
+Figure 95-MCP server operation 2
+When Claude Desktop is checked it shows and demonstrates the link between the MCP server on docker and the local VM.
+It allows the MCP server to operate and run on this VM
+
+
+5.3 Security and Exposure Validation
+5.3.1 Cloudflare Tunnel Validation
+
+Figure 96 – Cloudflare
+
+When accessed the from the domain that was bought, the default n8n screen is accessed from the guest VM.
+
+
+Acceptance Test Process and Results
+Test IDParticipant(s)Test Caseexpected resultActual ResultStatus1Ali Alaliwat, Sayed Hashem YusufReview operational logs generated by automation workflowsLogs generated and accessibleLogs reflect workflow execution and system statePass2Ali Alaliwat, Sayed Hashem YusufVerify ERP and database connectivity during normal operationERP communicates correctly with database serverConnectivity confirmed and stablePass3Ali AlaliwatQuery database information through AI interfaceDatabase information is fetched and queried through MCPDB information is successfully fetched and queried through MCP and n8nPass4Ali Alaliwat, Sayed Hashem YusufExecute scheduled automation workflowPass5Ali AlaliwatAccess n8n automation interface via Cloudflare domainn8n interface is accessible externallyn8n accessed successfully through domainPassTable 8-Acceptance results
+
+Usability testing, statistics and logs
+
+Usability testing was informally conducted to carefully assess the clarity and effectiveness of the system from a system administrator point of view. Most of the testing focused on interacting with the ai assisted interface and automation platform(n8n) to review automation outputs and retrieve DB information. 
+
+Ease of use and Learnability
+
+The system was simple to understand for both monitoring and system administration tasks, the automation workflows generate clear, transparent logs. This system structure supports efficient routine maintenance for everyday infrastructure administration use.
+
+Error Handling and Feedback
+Error handling in any part of the system was mainly managed through the automation workflow execution logs, as when any issues occurred, the workflow generated clear status outputs and log entries with tips and troubleshooting guides. This feedback greatly helps the system administrator to identify where the issue is as the system lists it and gives troubleshooting tips.
+
+6. Discussion
+This section discusses the outcomes of the implemented system in relation to project objectives and design decisions. It reflects on the effectiveness of the infrastructure architecture, automation workflows. The discussion also considers how the chosen design supports reliability, maintainability, and operational clarity in a production-like ERP environment.
+System Functionality
+This implemented system delivers a product oriented, functional ERP infrastructure that is designed to support continuous monitoring, operation and maintenance. Core functionality in the system is achieved through the separation of the Odoo application, PostgreSQL server, and AI server across multiple virtual machines and this separation guarantees improved reliability and predictable internal communication. The ERP server and DB server operate as independent servers within an isolated internal network at the infrastructure level. External access is intentionally limited with only the automation internal components, which is ran through a secure Cloudflare tunnel, while all the other services remain private only to authorized personnel.
+The system workflow checks run automatically at fixed intervals and provide continuous visibility into system health. Execution results are logged, allowing administrators to trace system behavior during normal operation and failure conditions.
+In addition to monitoring, the system supports AI-assisted operational interaction through automation workflows. An AI-enabled workflow allows system administrators to query the PostgreSQL database using natural language, with requests translated into predefined database queries executed by the automation platform. This functionality simplifies routine administrative tasks such as inspecting database structure or retrieving system-related data, without requiring direct database access or manual query execution.
+When abnormal conditions are detected, the system supports alerting and predefined operational responses, enabling administrators to react quickly to issues while maintaining traceability through logs and workflow execution records. These capabilities reduce reliance on constant manual supervision while preserving administrative control over system behavior.
+Overall, the system functions as an integrated infrastructure environment where virtualization, service isolation, automation, logging, and AI-assisted interaction work together to support reliable ERP operation, secure system maintenance, and efficient day-to-day administration.
+
+Accomplished Objectives
+The project's initial goals were all met, proving that integrating AI and workflow automation with an already-existing ERP system without changing its fundamental components is both feasible and effective.
+Objective CategoryObjectiveAchievement DescriptionStatusMain GoalDesign and operate a production-like ERP infrastructureA multi-VM ERP environment was successfully deployed with isolated services, internal networking, automation, monitoring, and controlled AI-assisted operations..AchievedTechnicalImplement deterministic and secure internal networkingStatic IP addressing and internal network isolation were configured to ensure reliable and predictable inter-service communication.AchievedTechnicalDeploy an automation platform for operational workflowsn8n was deployed using Docker and configured to manage health checks, logging, alerting, and controlled administrative workflows.AchievedTechnicalImplement scheduled health monitoring and loggingAutomated workflows were configured to perform periodic health checks and generate logs and reports regardless of system state.AchievedTechnicalDeploy ERP, database, and automation components on separate virtual machinesOdoo, PostgreSQL, and automation services were deployed on dedicated Windows Server virtual machines with verified internal connectivity.AchievedTechnicalMaintain modular and scalable architectureClear separation between UI, AI reasoning, tool selection, automation, and ERP execution was maintained.AchievedBusinessEnforce bounded AI executionAI interactions were limited to predefined workflows, ensuring that no autonomous or unrestricted system actions could occur.AchievedBusinessEnsure database isolation and access controlPostgreSQL was restricted to internal access only and made reachable exclusively by authorized ERP and automation services.AchievedBusinessSupport faster decision-makingAI-assisted access to ERP data enables quicker retrieval of relevant business information.AchievedTable 9-Accomplished objectives
+
+Project Issues, Proposed Solutions, and Actions
+During the implementation phase, several technical issues and challenges were faced, primarily DB connectivity issues and incompatibility issues as PostgreSQL did not connect despite having the correct credentials and had to recreate credentials on Odoo server and recheck connectivity until the proper configurations were applied on the pg.hba file and then connection was established clearly and consistently. Integration of automation workflows with multiple systems was another major challenge, ensuring that the system health check workflows could reliably check and detect any issues within the system and log the issue with troubleshooting guides was a complicated process of integrating OpenAI into the workflow, and also making sure false positives was a tedious process of correctly prompting AI and teaching it how to operate the database. Care was taken to ensure that AI interactions remained restricted to predefined interfaces and did not interfere with system stability. This was resolved by enforcing strict mediation through the MCP server and limiting AI-triggered actions to controlled operational tasks.
+Backup Plan
+A simple and practical plan was adopted and taken into consideration to handle any possible failures during system operation and testing phase. Since the system was developed in a simulated environment, VMware snapshots were utilized effectively and taken after every major configuration that was done on the system, which allowed the system to return to the state it was if faced any unknown issues from a simple configuration. Critical and important components such as the ERP server, DB and ai server were essential and when faced with a problem that could be fatal to the systems, they could be restored when needed.
+
+Future Work and Plan
+To further improve the system from an infrastructure and system administration perspective, several enhancements could be considered in future iterations. One potential direction is improving system resilience by introducing redundancy or high-availability mechanisms, such as database replication or service failover, to reduce single points of failure in production-scale deployments.
+From an automation standpoint, additional workflows could be developed to support routine maintenance tasks, including automated backup scheduling, configuration drift detection, and system update orchestration. These extensions would further reduce manual administrative effort and enhance long-term system stability. AI-assisted system administration could also be expanded beyond real-time queries to include summarized operational insights, historical trend analysis based on logs, or guided maintenance recommendations, 
+Future work may also explore deploying the system in hybrid or cloud-based environments to evaluate scalability, security, and operational complexity beyond a local virtualized setup. Application-level enhancements and AI-assisted ERP business interactions are addressed in the companion thesis by Sayed Hashem Yusuf, which focuses on workflow logic and ERP integration.
+Reflection on Project Experience and Learning Outcomes
+This project provided hands-on experience in designing and managing a production-oriented ERP infrastructure from a system administration perspective. One of the main lessons learned was the importance of treating enterprise systems as continuously operating services rather than static deployments. Designing the system using multiple virtual machines reinforced the value of separation of concerns, isolation, and controlled communication.
+I gained practical experience with virtualization using VMware Workstation, including virtual machine provisioning, internal networking, snapshot management, and recovery strategies. Working in a simulated local environment demonstrated how virtualization supports safe testing, rollback, and troubleshooting during infrastructure development.
+The project strengthened my skills in system administration on Windows Server platforms. Deploying ERP and database services on separate servers improved my understanding of service dependencies, access control, and secure internal communication. Automation through n8n workflows highlighted how scheduled monitoring, logging, and recovery actions can significantly reduce manual administrative effort.
+A key learning outcome was the controlled integration of artificial intelligence into infrastructure operations. Working with the MCP showed how AI can assist system administrators by providing access to system and database information while maintaining strict execution boundaries and auditability.
+The project also provided valuable experience with containerization using Docker. I learned how to deploy Docker images, manage containers, and configure services using JSON-based configuration files. Integrating containerized automation and MCP services within a Windows Server environment improved my understanding of modern infrastructure practices.
+Overall, this project enhanced my technical skills in infrastructure design, automation, container deployment, configuration management, and AI-assisted system administration, providing a strong foundation for future work in system administration and infrastructure engineering.
+
+Bahraini Perspectives
+Bahrain has demonstrated a strong national commitment to digital transformation and the adoption of advanced technologies, creating a supportive environment for infrastructure automation and AI-assisted IT operations. The Kingdom’s National Digital Economy Strategy emphasizes the use of digital platforms, cloud technologies, and automation to enhance productivity, resilience, and competitiveness, particularly for SMEs (Information & eGovernment Authority [iGA], 2023). Reliable system infrastructure and operational automation, such as those explored in this project, are foundational to achieving these objectives.
+In parallel, Bahrain has taken steps toward establishing an AI-ready regulatory and policy environment that promotes innovation while encouraging responsible and ethical use of artificial intelligence. These initiatives support the adoption of AI as an assistive technology rather than an autonomous decision-maker, aligning with the approach taken in this project where AI is integrated into system administration through controlled interfaces and predefined operational boundaries (ASAR Legal, 2023).
+From an infrastructure perspective, the increasing reliance of Bahraini organizations on ERP systems and digital services highlights the importance of availability, security, and maintainability. Automation and AI-assisted system administration can help local enterprises reduce operational overhead, improve system reliability, and respond more effectively to technical issues without requiring large IT teams. This is particularly relevant for SMEs operating within constrained technical and human resource environments.
+Overall, the project does not pose a threat to Bahraini cultural values, as it does not collect or analyze personal or culturally sensitive data. Instead, it supports national digital transformation goals by promoting professional IT practices, responsible AI use, and operational efficiency. Within Bahrain’s broader push toward technological modernization, the system represents a practical example of how infrastructure automation and AI-assisted operations can be adopted in a way that respects ethical considerations while strengthening local technical capacity.
+
+LESPI Introduction
+The LESPI (Legal, Ethical, Social, and Professional Issues) framework is used to evaluate the broader implications of technical systems beyond their functional implementation. In the context of this project, LESPI considerations are particularly relevant due to the use of automation, system monitoring, and AI-assisted system administration within an ERP infrastructure. This section discusses the legal, ethical, social, and professional aspects associated with the design and deployment of the proposed system, focusing on responsible use, operational transparency, and professional best practices.
+
+Legal Considerations
+From a legal perspective, the system was designed and deployed in a local, simulated environment using open-source software and evaluation versions of operating systems. No real personal or sensitive production data was used during development or testing. Database access and automation actions were restricted to authorized administrative contexts, reducing the risk of unauthorized data access. The controlled exposure of services through secure tunneling mechanisms further supports compliance with basic data protection and access control principles.
+
+Ethical Considerations
+Ethical considerations primarily relate to the use of AI within system administration. In this project, AI was deliberately restricted to an assistive role and was not granted unrestricted control over system resources. All AI interactions were mediated through predefined interfaces and logged for traceability, ensuring accountability and preventing misuse. This approach aligns with ethical best practices by prioritizing transparency, explainability, and human oversight when integrating AI into infrastructure operations.
+
+Social Considerations
+Social implications of the system are limited, as the project does not directly target end users or public-facing services. However, by improving infrastructure reliability, automation, and operational clarity, the system indirectly supports more stable and dependable enterprise applications. Reduced system downtime and clearer operational visibility can positively impact organizations and teams that rely on ERP systems for daily operations.
+
+Professional Considerations
+From a professional standpoint, the project adheres to recognized system administration and infrastructure engineering best practices. These include separation of concerns, least-privilege access, controlled automation, comprehensive logging, and careful use of AI assistance. The project demonstrates professional responsibility by avoiding over-automation, maintaining manual fallback options, and clearly defining system boundaries. These practices reflect industry standards and reinforce the importance of reliability, security, and accountability in professional IT environments.
+
+
+7. Conclusion
+This thesis demonstrated that the success of an ERP deployment depends strongly on infrastructure reliability, automation, and secure operations. By implementing a production-like multi-VM ERP environment on VMware Workstation, separating the application and database layers, and introducing an operations automation layer with scheduled self-checking and self-healing workflows, the project achieved continuous visibility, reduced manual intervention, and improved operational resilience.
+Controlled AI-assisted operations were integrated through MCP to enhance administrator interaction without granting unrestricted system access. Secure external exposure was provided using Cloudflare Tunnel, minimizing the public attack surface while preserving accessibility. Overall, the project provides a practical, reproducible blueprint for SME-grade ERP infrastructure operations that prioritizes maintainability, availability, and disciplined system administration.
+
+8. References
+Anthropic. (2024). Model Context Protocol (MCP): Secure AI tool integration. https://www.anthropic.com/research/model-context-protocol
+Behl, A., Behl, K., & Pereira, V. (2022). Managing AI-enabled IT operations (AIOps): Opportunities and challenges. Journal of Business Research, 139, 737–748. https://doi.org/10.1016/j.jbusres.2021.10.056
+Burns, B., Grant, B., Oppenheimer, D., Brewer, E., & Wilkes, J. (2016). Borg, Omega, and Kubernetes. Communications of the ACM, 59(5), 50–57. https://doi.org/10.1145/2890784
+Chen, M., Xu, Z., Weinberger, K., & Sha, F. (2023). AIOps: Operational intelligence for modern IT systems. IEEE Software, 40(2), 45–53. https://ieeexplore.ieee.org/document/10050779
+Cloudflare, Inc. (2024). Cloudflare Tunnel documentation. https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+Docker, Inc. (2024). Docker documentation. https://docs.docker.com
+Fehling, C., Leymann, F., Retter, R., Schupeck, W., & Arbitter, P. (2014). Cloud computing patterns. Springer. https://link.springer.com/book/10.1007/978-3-7091-1568-1
+Hassan, S., Ali, M., & Khan, S. (2023). Automation and self-healing mechanisms in enterprise IT systems. International Journal of Information Management, 68, 102553. https://doi.org/10.1016/j.ijinfomgt.2022.102553
+Information & eGovernment Authority (iGA). (2023). Bahrain National Digital Economy Strategy. https://www.iga.gov.bh
+Kim, G., Behr, K., & Spafford, G. (2016). The Phoenix Project. IT Revolution Press. https://itrevolution.com/the-phoenix-project/
+Microsoft. (2024). Windows Server documentation. https://learn.microsoft.com/windows-server
+n8n GmbH. (2024). n8n workflow automation documentation. https://docs.n8n.io
+Newman, S. (2015). Building microservices. O’Reilly Media. https://www.oreilly.com/library/view/building-microservices/9781491950340/
+Odoo S.A. (2024). Odoo Community Edition documentation. https://www.odoo.com/documentation
+PostgreSQL Global Development Group. (2024). PostgreSQL documentation. https://www.postgresql.org/docs
+VMware, Inc. (2024). VMware Workstation documentation. https://docs.vmware.com/en/VMware-Workstation
+Xu, H., Chen, Y., & Li, Z. (2023). Observability-driven operations in distributed systems. IEEE Transactions on Services Computing, 16(4), 2190–2203. https://ieeexplore.ieee.org/document/9739385
+Zhang, C., Kumar, A., & Patel, R. (2024). Event-driven automation for resilient enterprise systems. Journal of Systems and Software, 205, 111104. https://doi.org/10.1016/j.jss.2023.111104
+Bahrain Chamber of Commerce and Industry. (2023). Digital transformation initiatives for SMEs. https://www.bahrainchamber.bh
+
+9.Appendices
+
+Appendix I: System and User Manuals
+Appendix one should provide two clear manuals that should be able to support system handover and operational functionality of the ERP infrastructure 
+These manuals should be able to introduce both technical administrators and operational users into the system.
+The manuals included in this appendix are:
+
+System Administration and Operations Manual (for technical and infrastructure-focused users)
+
+System Configuration and Access Manual (for operational and validation purposes)
+
+Each certain manual focuses on practical usage, operational procedures, and configuration responsibilities relevant to a production-like ERP infrastructure. Where appropriate, references to recommended screenshots are included to visually support configuration steps, system validation, and operational workflows.
+System overview
+This system consists of a production-like ERP infrastructure that is deployed on a local virtualized using VMware. Four different VM's are deployed each with their specific uses. The architecture is composed of multiple isolated Windows Server virtual machines that separately host the ERP application (Odoo Community Edition), the PostgreSQL database, and an automation and AI operations layer. External access is securely limited to the automation interface via Cloudflare Tunnel. Operational workflows such as monitoring, logging, alerting, and controlled AI-assisted system and database inspection are implemented using n8n, Docker, MCP, and Claude Desktop, with strict boundaries to prevent autonomous or unrestricted system actions.
+
+For proper and correct system function and operation, these systems must be functional and running:
+* Odoo Community Edition (ERP application server)
+* n8n automation engine
+* PostgreSQL database service
+* MCP server (containerized, internal access only)
+* Docker service (for containerized automation and MCP services)
+
+
+Figure 97-n8n credentials selection screen
+
+Figure 98-n8n Workflow selection screen
+
+Figure 99-MCP server runtime in docker
+
+
+Figure 100-n8n chatbot UI
+Appendix III: Detailed System design
+This part of the appendix is skipped over, as the system design, architecture, deployment and activity diagram are all already explained in detail in the aforementioned UML section
+Appendix IV: Detailed implementation
+1.Chat with PostgreSQL database JSON code:
+This section explains selected implementation details by showing key JSON configurations used in the automation workflows. n8n workflows can be exported as JSON files, making them portable and easy to reuse or redeploy without manual rebuilding. Including these JSON definitions demonstrates the practicality, reproducibility, and maintainability of the system design.
+
+Figure 101-Chat with PostgreSQL database download
+
+{
+  "name": "Chat with Postgresql Database",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "beae0394-0ce8-43c7-b6ae-326de9bc2549",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        2176,
+        896
+      ],
+      "webhookId": "cf1de04f-3e38-426c-89f0-3bdb110a5dcf",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "agent": "openAiFunctionsAgent",
+        "options": {
+          "systemMessage": "You are DB assistant. You need to run queries in DB aligned with user requests.\n\nRun custom SQL query to aggregate data and response to user. Make sure every table has schema prefix to it in sql query which you can get from Get DB Schema and Tables List tool.\n\nFetch all data to analyse it for response if needed.\n\n## Tools\n\n- Execute SQL query - Executes any sql query generated by AI\n- Get DB Schema and Tables List - Lists all the tables in database with its schema name\n- Get Table Definition - Gets the table definition from db using table name and schema name"
+        }
+      },
+      "id": "af05342a-5835-4f5e-b2ad-c01bd93c8228",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2480,
+        896
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "d57179f8-bb1b-4e63-b7d3-ad0a40a9f8b0",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        2416,
+        1136
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "4VDU9Vs1r8F7hBvf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get table definition to find all columns and types",
+        "operation": "executeQuery",
+        "query": "select\n  c.column_name,\n  c.data_type,\n  c.is_nullable,\n  c.column_default,\n  tc.constraint_type,\n  ccu.table_name AS referenced_table,\n  ccu.column_name AS referenced_column\nfrom\n  information_schema.columns c\nLEFT join\n  information_schema.key_column_usage kcu\n  ON c.table_name = kcu.table_name\n  AND c.column_name = kcu.column_name\nLEFT join\n  information_schema.table_constraints tc\n  ON kcu.constraint_name = tc.constraint_name\n  AND tc.constraint_type = 'FOREIGN KEY'\nLEFT join\n  information_schema.constraint_column_usage ccu\n  ON tc.constraint_name = ccu.constraint_name\nwhere\n  c.table_name = '{{ $fromAI(\"table_name\") }}'\n  AND c.table_schema = '{{ $fromAI(\"schema_name\") }}'\norder by\n  c.ordinal_position",
+        "options": {}
+      },
+      "id": "1f47ea76-74b8-4246-9f58-3d73b8c3d127",
+      "name": "Get Table Definition",
+      "type": "n8n-nodes-base.postgresTool",
+      "position": [
+        3264,
+        1120
+      ],
+      "typeVersion": 2.5,
+      "credentials": {
+        "postgres": {
+          "id": "9D7BCqMCbaQeo3Wy",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### ????? Setup\n1. Add your *postgresql* and *OpenAI* credentials.\n2. Click *Chat* button and start asking questions to your database.\n3. Activate the workflow and you can make the chat publicly available.",
+        "height": 120,
+        "width": 560,
+        "color": 5
+      },
+      "id": "8ba27475-f4f3-4fb5-a23c-9e37e452c458",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "2fde46ce-e8de-4a08-8fa9-8bf6e08dcbf9",
+      "name": "Chat History",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        2608,
+        1136
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "content": "??? Tools Used:\n1. Execute SQL Query: Used to execute any query generated by the agent.\n2. Get DB Schema and Tables List: It returns the list of all the tables with its schema name.\n3. Get Table Definition: It returns table details like column names, foreign keys and more of a particular table in a schema.",
+        "height": 156,
+        "width": 562,
+        "color": 7
+      },
+      "id": "f8753e72-e6f2-4e1e-9097-389c557d79b6",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2848,
+        1280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "?? You can exchange this with any other chat model of your choice.",
+        "height": 80,
+        "width": 162,
+        "color": 7
+      },
+      "id": "d24833e3-2110-451c-87cd-482be367d8fa",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2384,
+        1280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "?? You can change how many number of messages to keep using Context Window Length option. It's 5 by default.",
+        "height": 159,
+        "width": 162,
+        "color": 7
+      },
+      "id": "60745a53-52a1-46f6-8705-42d5d87db890",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2576,
+        1280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get all the data from Postgres, make sure you append the tables with correct schema. Every table is associated with some schema in the database.",
+        "operation": "executeQuery",
+        "query": "{{ $fromAI(\"sql_query\", \"SQL Query\") }}",
+        "options": {}
+      },
+      "id": "4958cc69-f3d8-45e2-9e43-8782ccc5575d",
+      "name": "Execute SQL Query",
+      "type": "n8n-nodes-base.postgresTool",
+      "position": [
+        2864,
+        1120
+      ],
+      "typeVersion": 2.5,
+      "credentials": {
+        "postgres": {
+          "id": "9D7BCqMCbaQeo3Wy",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get list of all tables with their schema in the database",
+        "operation": "executeQuery",
+        "query": "SELECT \n    table_schema,\n    table_name\nFROM information_schema.tables\nWHERE table_type = 'BASE TABLE'\n    AND table_schema NOT IN ('pg_catalog', 'information_schema')\nORDER BY table_schema, table_name;",
+        "options": {}
+      },
+      "id": "5acae786-4d59-48b6-a549-2f574fd11188",
+      "name": "Get DB Schema and Tables List",
+      "type": "n8n-nodes-base.postgresTool",
+      "position": [
+        3056,
+        1120
+      ],
+      "typeVersion": 2.5,
+      "credentials": {
+        "postgres": {
+          "id": "9D7BCqMCbaQeo3Wy",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat History": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute SQL Query": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Table Definition": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DB Schema and Tables List": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "82900703-5ca4-4354-9eb2-a1ee30da2c4a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7053717dc9c5c3cb5b47edde04beb06985659c09c39d729d5c3c415119cd4642"
+  },
+  "id": "MISogawH3bdPegpO",
+  "tags": []
+}
+This provided code is JSON format of the downloaded workflow. A chat trigger passes user input to an AI agent, which uses predefined database tools to inspect schemas, table structures, and execute controlled SQL queries. All database access is mediated through fixed workflow nodes, ensuring bounded execution and preventing direct or unrestricted AI access.
+
+
+
+2.Health and check alert:
+
+
+Figure 102-Health and check alert workflow
+This provided code is JSON format of the downloaded workflow. It verifies ERP availability, database connectivity, and MCP service health, then aggregates the results for evaluation. If an issue is detected, the workflow uses an AI agent to summarize the problem and sends an alert notification, while also generating a log file for audit and troubleshooting purposes.
+{
+  "name": "Health Check Automated",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "dcab8604-b837-4a43-a2fe-4c8bf4137da3",
+      "name": "Every 30 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        2080,
+        1456
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://192.168.233.133:8069/web/health",
+        "options": {
+          "timeout": 100000
+        }
+      },
+      "id": "88dea0cd-7cb5-4ac6-a333-c28570ed7c4a",
+      "name": "Check Odoo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2432,
+        1328
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "http://192.168.133.233:8000/health",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "10ddacc1-d7ad-4019-b367-32983fcd546a",
+      "name": "Check MCP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2432,
+        1456
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT 1 as health_check",
+        "options": {}
+      },
+      "id": "a2c94e3e-0f11-42f7-9143-ee6afbdc1cfe",
+      "name": "Check Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        2432,
+        1584
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "9D7BCqMCbaQeo3Wy",
+          "name": "Postgres account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e80b8e1e-c2d4-45b6-a55e-68ad42bf8447",
+              "leftValue": "={{ $('Check MCP').item.json.error.stack }}",
+              "rightValue": "={{ $('Check Database').item.json.health_check }}",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0ee351c6-b0b3-45e0-85cb-01e058dcb00e",
+      "name": "Alert Required?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3248,
+        1456
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2896,
+        1664
+      ],
+      "id": "46ce7992-75de-4b32-9373-c1ae33f6dbd8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4VDU9Vs1r8F7hBvf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2704,
+        1440
+      ],
+      "id": "feabc2dd-4e0a-4987-8a98-56c05b0987d6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are sys admin, these system health and assess them if needed\n\n{{ $json.error.stack }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2896,
+        1456
+      ],
+      "id": "cf59d6cc-221c-4153-90dc-97ba1aabf020",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "binaryPropertyName": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3520,
+        1600
+      ],
+      "id": "3a73edf4-5668-43b1-ad99-8ca2856b9f7b",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "sendTo": "alichevyz40@gmail.com",
+        "subject": "error needs manual intervention",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3584,
+        1280
+      ],
+      "id": "8f75ecc4-3da2-48ca-b42d-a4f6003d97d7",
+      "name": "Send a message",
+      "webhookId": "c93c9cfb-3ae4-46f5-adb0-ab7261e403e0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CpqnEak5rRa1jBZu",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 30 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Check Odoo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check MCP",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Odoo": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check MCP": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check Database": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Alert Required?": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Alert Required?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "be7a936a-9990-4665-81f5-49456d1384cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7053717dc9c5c3cb5b47edde04beb06985659c09c39d729d5c3c415119cd4642"
+  },
+  "id": "MISogawH3bdPegpO",
+  "tags": []
+}
+2
+
+

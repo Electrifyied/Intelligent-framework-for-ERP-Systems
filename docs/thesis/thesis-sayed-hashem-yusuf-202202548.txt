@@ -1,0 +1,2690 @@
+
+
+Intelligent framework for ERP Systems
+
+
+by
+
+Sayed Hashem Yusuf
+Ali alaliwat
+
+
+A Thesis Submitted in
+
+(Partial) Fulfillment of the
+
+Requirements for the Degree of
+
+
+
+Bachelor of Technology
+
+in Information & Communication Technology (MIS)
+
+
+
+
+at
+
+Bahrain Polytechnic
+
+December 2025
+
+Title
+
+
+Intelligent framework for ERP Systems
+
+Copyright
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+© 2025
+
+Sayed Hashem Yusuf
+
+All rights reserved
+Declaration
+I hereby declare that this submission is my own work, and to the best of my knowledge and belief, it contains no material previously published or written by another person nor material which to a substantial extent has been accepted for the award of any other degree or diploma of the university or other institute of higher learning, except where due acknowledgment has been made in the text.
+
+
+……………………….. /.Sayed Hashem Yusuf…………................ / 26/12/2025…………
+Signature			name  		 		date: 
+
+
+Approval Signatures
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+APPROVED FOR THE ICT PROGRAMME
+
+
+
+________________________________________________
+Cyril Anthoni, 	Thesis Supervisor		Date
+
+
+
+________________________________________________
+Shahnawaz Khan, 	Technical Writing Tutor	Date
+Abstract
+ERP systems are full of features but can be a bit hard to work with, there's so much clicking, manual actions, and you can easily get stuck. This project addresses that by developing an AI-enhanced ERP solution that is user-friendly and smart enough to manage business processes automatically. The whole solution is created based on Odoo Community Edition and consists of two key pieces working together with an AI chatbot and an automation platform.
+
+The chatbot uses the Model Context Protocol (MCP), so you can interact with the ERP using plain English language. MCP servers handle schema, query building, validation, and making sure it all run correctly. This keeps your data protected but allows you to interact with the system. Besides the chatbot, the n8n automation platform covers business automation such as capturing leads, automating e-mails and fraud detection. Some workflows start up from chatbot conversations, and others run all the time to keep the processes going.
+
+To evaluate everything, we tested how well the chatbot responds, whether MCP ensures query safety, and if the automation completes tasks effectively. The outcome becomes that the ERP is easier to use, there’s far less manual actions, and processes flow more smoothly. In the end, combining constructed AI systems with workflow automation gives businesses a scalable and practical way to make their ERP systems work for them.
+
+
+
+Keywords: ERP, Artificial Intelligence, Model Context Protocol (MCP), Odoo Community Edition, n8n, Business Process Automation, Chatbot, Fraud Detection
+
+Acknowledgements
+First, I would like to express my gratitude to our project supervisor, Mr. Cyril Anthoni, for guiding us through the whole process and giving his honest feedback. His insight and encouragement made us improve both technically and academically.
+
+I am also grateful to our lecturer Dr. Shahnawaz Khan who was always available whenever we needed any help in the right direction.
+
+I would also like to express my gratitude to Mr. Husain Alzain, instructor of the Enterprise Resource Planning course. He sparked my interest in ERP systems right from the beginning of the course. His lectures inspired me to learn more about the world of ERP systems.
+
+I would also like to thank the broader online community of creators whose great content provided inspiration during long sessions.
+
+Finally, I would also like to thank my family and friends, who were supportive and encouraging during the hard times. I would especially like to express my thanks to my colleague and close friend Ali Alaliwat, whose hard work greatly contributed to the success of this project.
+
+
+Table of Contents
+Title	I
+Declaration	III
+Abstract	V
+Table of Contents	VII
+List of Figures	IX
+List of Tables	X
+List of Abbreviations	XI
+1.	Introduction	1
+Project Rationale	1
+Project Objectives	2
+Prior Work	3
+Hypothesis	3
+Proposed Solution	4
+Description of the Report	5
+2. Background	6
+Introduction	6
+Related Theory	6
+Used and Considered Technology	7
+Related Work & Literature Review	10
+3. Methodology	12
+Requirements and Design	12
+Requirements Analysis	12
+System Design Approach	13
+UML Diagrams	13
+Use case diagram	14
+Sequence Diagram	15
+Activity diagram	16
+System Architecture	17
+Deployment and Automation Architecture Diagram	17
+4. Implementation	18
+Implementation Steps	18
+5. Testing	47
+Test Plan	47
+Participants	47
+Functional Requirements Test Cases and Results	48
+Acceptance Test Process and Results	57
+Usability testing, statistics and logs	58
+6. Discussion	60
+System Functionality	60
+Accomplished Objectives	60
+Project Issues	61
+Backup Plan	62
+Future Plan and Work	62
+Reflection of Experience	63
+Bahraini Perspectives	63
+LESPI	64
+Legal Issues	64
+Ethical Issues	64
+Social Issues	64
+Professional Issues	64
+7. Conclusion	65
+8. References:	66
+9. Appendices	67
+Appendix I: System and User Manuals	67
+Appendix III: Detailed Design	67
+Appendix IV: Detailed Implementation	72
+
+
+
+List of Figures
+Figure 1 - Use Case Diagram for intelligent ERP System	15
+Figure 2 - Sequence Diagram for Natural Language ERP Query Processing	16
+Figure 3 - Activity Diagram for MCP Execution	17
+Figure 4 -  Deployment / Infrastructure Architecture Diagram with an automation focus	18
+Figure 5 - Odoo dashboard	21
+Figure 6 - Odoo settings	22
+Figure 7 - Odoo demo assets	22
+Figure 8 - Odoo demo assets 2	23
+Figure 9 - Odoo app module	24
+Figure 10 - Odoo REST API health check	24
+Figure 11 - Python code on VSCode	25
+Figure 12 - n8n main dashboard	26
+Figure 13 - n8n workflow canvas	27
+Figure 14 - n8n workflow canvas node selection	27
+Figure 15 - n8n workflow canvas node selection 2	28
+Figure 16 - n8n node deployment	28
+Figure 17 - n8n node parameters	29
+Figure 18 - n8n AI Agent node	30
+Figure 19 - n8n AI Agent node chat model selection	30
+Figure 20 - n8n AI Agent node chat model selection 2	31
+Figure 21 - n8n AI Agent node chat model credentials	31
+Figure 22 - n8n AI Agent node chat model variant selection	32
+Figure 23 - n8n MCP Client node	32
+Figure 24 - n8n Respond to Webhook node	33
+Figure 25 - n8n AI Agent node parameters	33
+Figure 26 - n8n Respond to Webhook node parameters	34
+Figure 27 - n8n MCP Client node parameters	35
+Figure 28 - n8n AI chatbot workflow	36
+Figure 29 - n8n MCP Client tool node	38
+Figure 30 - n8n MCP Client tool node parameters	39
+Figure 31 - n8n Email Trigger node	41
+Figure 32 - n8n Email Trigger node parameters	41
+Figure 33 - n8n automated workflow overview	42
+Figure 34 - n8n LLM filtering node prompt configuration	43
+Figure 35 - n8n If statement node parameters	44
+Figure 36 - n8n MCP Client node parameters configuration	44
+Figure 37 - n8n automated workflow overview 2	45
+Figure 38 - n8n MCP Client node parameters configuration 2	46
+Figure 39 - n8n MCP Client node parameters configuration 3	46
+Figure 40 - n8n JavaScript node code	47
+Figure 41 - n8n MCP Client node parameters configuration 4	48
+Figure 42 - n8n automated workflow overview 3	48
+Figure 43 - n8n LLM filtering node prompt configuration 2	49
+Figure 44 - n8n Send Email node parameters	50
+Figure 45 - n8n AI chatbot workflow overview	53
+Figure 46 - Python interface using streamlit library	54
+Figure 47 - Python interface processing	54
+Figure 48 - n8n AI chatbot workflow processing	55
+Figure 49 - Python interface query result	55
+Figure 50 - Python interface data analysis of query testing	56
+Figure 51 - n8n AI Agent node process log	56
+Figure 52 - n8n automated workflow overview triggering	57
+Figure 53 - Sending Email to n8n node	58
+Figure 54 - n8n LLM filtering node input result	58
+Figure 55 - n8n MCP Client node input result	59
+Figure 56 - n8n MCP Client node input result 2	59
+Figure 57 - Odoo automated CRM lead creation from n8n	60
+Figure 58 - Automated Email receiving from n8n	61
+Figure 59 - n8n responsiveness logs	63
+Figure 60 - n8n responsiveness logs 2	63
+Figure 61 - AI chatbot process diagram	73
+Figure 62 - n8n workflow selection dashboard	74
+Figure 63 - MCP Server runtime on docker	75
+Figure 64 - Python interface of AI chatbot initiation	75
+Figure 65 - n8n workflow canvas overview	76
+Figure 66 - n8n node dragging	76
+Figure 67 - n8n credentials manager dashboard	77
+Figure 68 - n8n log executions dashboard	78
+Figure 69 - n8n log executions player	78
+Figure 70 - n8n workflow download	94
+Figure 71 - n8n workflow import	94
+Figure 72 - n8n workflow import 2	95
+Figure 73 - n8n workflow imported	95
+
+
+
+
+List of Tables
+Table 1 - Abbreviations	XII
+Table 2 - Tasks of project	5
+Table 3 - List of technologies used	9
+Table 4 - Implementation steps	18
+Table 5 - Participants for testing	47
+Table 6 – Testing use cases results	48
+Table 7 - Test process results	57
+Table 8 - Objective completion	61
+
+
+List of Abbreviations
+AbbreviationFull FormAIArtificial IntelligenceERPEnterprise Resource PlanningMCPModel Context ProtocolNLPNatural Language ProcessingSQLStructured Query LanguageDBDatabaseAPIApplication Programming InterfaceUIUser InterfaceUXUser Experiencen8nNode-based Automation PlatformCRMCustomer Relationship ManagementCI/CDContinuous Integration / Continuous DeploymentTable 1 - Abbreviations
+
+1. Introduction
+ERP systems sit at the center of modern businesses. They handle everything from sales and customer management to inventory and finance. But most ERPs are tough to use. They’re packed with features but navigating them often means you need to be a bit technical and have a lot of training. That kind of complexity slows people down, keeps adoption low, and makes teams lean too much on IT for even simple stuff.
+
+Lately, AI has started to become popular. Thanks to things like natural language interfaces and automation, there’s a way to make these systems easier like talking to your data or triggering business processes in plain English. But dropping AI into an ERP isn’t straightforward. You have to think about data safety, make sure the system only runs valid queries, and keep control over who can access what.
+
+This project tackles those issues. We’re building an AI-powered ERP solution on top of Odoo Community Edition. The main idea is to let users work with the ERP through an AI chatbot and just type what you want, and the system takes care of the rest. Behind the scenes, we use the Model Context Protocol (MCP) to make sure everything runs safely. MCP servers handle the backend, it translates your queries and turn them into Odoo JSON API calls and executes them, acting as a gatekeeper between the AI and the ERP.
+
+But that’s not all. We’ve also added business process automation with n8n. These automations run key workflows like capturing leads, sending emails, and flagging fraud all automatically. Some invoke when you chat with the bot, others keep things running in the background without any user input. By blending AI-based interaction with automation, we’re out to make ERPs easier to use, faster, and more effective for businesses.
+
+
+Project Rationale
+ERP systems keep companies running, but they aren’t exactly user-friendly most of the time, especially if you’re not a tech expert. Even simple things, like importing a report or updating a record can turn into a hassle. People end up clicking through a lot of menus or waiting on IT, which slows everything down and means most employees never use half the features available. On top of that, stuff like tracking leads, talking to customers, or spotting fraud still involves a lot of manual work or some custom setups that are hard to update as your business grows.
+
+This project takes a different route. We’re breaking things into modules and implementing AI to make it easier. With an AI chatbot built on Model Context Protocol (MCP) servers, anyone can ask for ERP data or start off tasks in plain language, no more navigating through the interface or worrying about security, since every request is checked and kept in context. At the same time, we’re using n8n to set up separate business workflows for lead capture, automated emails, fraud alerts without messing with the ERP’s core system. Put it all together, and you get a setup that’s easier to use, works faster, and can grow with your company.
+
+Project Objectives
+The main goal of this project is to improve how users interact with an ERP system while increasing overall operational efficiency. This is achieved by introducing artificial intelligence to enable natural language interaction and by automating selected business processes to minimize manual work. The project also focuses on integrating AI components and workflow automation in a secure and scalable manner, ensuring that all enhancements operate alongside the ERP system without requiring changes to its core structure.
+
+
+
+
+Technical objectives:
+* Develop an AI-based chatbot that allows users to interact with the ERP system using natural language.
+* Implement Model Context Protocol (MCP) servers to provide secure, validated, and context-aware access to ERP data and operations.
+* Connect the chatbot with Odoo Community Edition to support querying and executing ERP functions.
+* Build automated business workflows using n8n for processes such as lead capture, email automation, and fraud detection.
+* Maintain a modular and scalable architecture by clearly separating AI interaction components from workflow automation logic.
+
+Business objectives:
+* Make ERP systems easier to use by minimizing the technical knowledge required to access information and perform tasks.
+* Improve overall efficiency by automating repetitive and time-consuming business processes.
+* Support better and faster decision-making through quick access to ERP data via AI-driven interaction.
+* Decrease reliance on manual operations and continuous IT support for routine ERP activities.
+* Deliver a flexible and scalable solution that can adapt to the needs of startups and small to medium-sized enterprises.
+
+
+
+
+
+
+Prior Work
+Many Enterprise Resource Planning systems are really hard for users to deal with because they have a lot of stuff on the screen and the steps to do things are not simple. This means that employees usually need to learn how to use them before they can do their jobs properly.
+
+To make things easier companies often use tools to automate some tasks like sending notes making reports and keeping all the information up to date, The problem is that these tools are usually added on later or they need a lot of work to make them fit with the Enterprise Resource Planning system that the company is already using. The Enterprise Resource Planning system is what the company relies on to manage its business. This way of doing things makes the whole system less flexible. It is harder to make it bigger when the organization gets bigger. The organization will have a lot of problems because of this.
+
+In recent years, there has been a lot of interest among researchers in exploring how AI can improve the usability of enterprise systems. The introduction of conversational agents and NLP interfaces enabled users to access system data simply by making requests in natural language, closely resembling how human talk with each other. While these advancements significantly improve these systems, they also present challenges. Concerns have been raised regarding data security, the reliability of query results, and the accurate interpretation of user context. Adamopoulou and Moussiades (2020) emphasize that, although chatbots hold considerable potential for business applications, effective implementation requires organizations to establish heavy control mechanisms to ensure security and reliability.
+
+Building on this prior work, the current project integrates AI-based ERP interaction with structured context control using Model Context Protocol (MCP) servers, alongside workflow automation implemented through n8n. This design aims to overcome the challenges in previous studies by improving ERP usability while maintaining validated and secure access to enterprise data.
+
+Hypothesis 
+The integration of an AI-driven chatbot with an ERP system, supported by Model Context Protocol (MCP) servers, will significantly improve ERP usability and accessibility while maintaining secure and controlled access to enterprise data. Furthermore, the incorporation of workflow automation using n8n will reduce manual effort and increase operational efficiency by automating key business processes such as lead management, communication, and fraud detection. It is hypothesized that combining structured AI interaction with integrated automation will result in improved system efficiency, reduced dependency on technical staff, and a more scalable ERP solution compared to traditional ERP usage methods.
+
+Proposed Solution
+The proposed solution introduces an AI-augmented enhancement to an existing ERP system with the goal of improving usability, efficiency, and automation without modifying the ERP core. The system is built on Odoo Community Edition and integrates artificial intelligence and workflow automation as external, modular components.
+
+At the interaction layer, an AI chatbot is provided to allow users to communicate with the ERP system using natural language. Rather than allowing direct access to the database, the chatbot interacts with the ERP through Model Context Protocol (MCP) servers. These servers act as an intermediate control layer responsible for understanding ERP schemas, generating queries, validating requests, and executing approved operations. This approach ensures that AI interactions remain secure, context-aware, and controlled.
+
+In parallel, the solution incorporates business process automation using n8n. Workflow automations are designed to handle operational tasks such as lead capturing, automated email communication, and fraud detection. Some workflows are triggered directly by chatbot interactions, while others operate independently based on predefined business rules or system events. This separation allows automation to function reliably without being tightly coupled to the AI component.
+
+Overall, the proposed solution adopts a modular architecture that separates AI interaction, workflow automation, and ERP core functionality. This design improves maintainability, scalability, and flexibility, making the system suitable for real-world enterprise environments.
+
+Features
+* Natural language interaction with the ERP system through an AI-powered chatbot
+* Secure and validated ERP access using Model Context Protocol (MCP) servers
+* Context-aware query understanding and execution without direct database exposure
+* Workflow automation using n8n for lead management, email automation, and fraud detection
+* Well built architecture that separates AI logic, automation workflows, and ERP core
+* Scalable design suitable for small and medium enterprises
+
+
+
+
+
+
+Tasks
+Table 1: Project Tasks
+Task IDTask Description1Analyze ERP requirements and identify automation opportunities2Design system architecture and integration3Develop MCP servers for ERP interaction4Implement AI chatbot and natural language interface through Python code5Configure n8n workflows for business process automation6Integrate chatbot interactions with selected automation workflows7Perform system testing and validation8Document the system design, implementation, and resultsTable 2 - Tasks of project
+
+
+
+Description of the Report 
+This report documents the design, development, and evaluation of an AI-augmented ERP enhancement implemented using Odoo Community Edition. The proposed solution integrates an AI-based chatbot supported by Model Context Protocol (MCP) servers to enable secure, context-aware interaction with ERP data, alongside workflow automation implemented using n8n to support selected business processes.
+
+The report begins by outlining the project background, objectives, and related work in ERP usability, artificial intelligence, and automation. It then details the proposed system architecture, describing the roles of the chatbot, MCP servers, and automation workflows, as well as their integration with the ERP system. Subsequent sections focus on the implementation process, system testing, and evaluation of functionality and efficiency. The report concludes with a discussion of the results, identified limitations, and potential areas for future enhancement.
+
+2. Background
+
+Introduction
+Enterprise Resource Planning (ERP) systems form the backbone of many modern organizations by integrating business functions into a unified platform. These systems centralize data and standardize processes across departments such as sales, finance, human resources, and customer relationship management. While ERP platforms improve data consistency and operational control, their complexity often creates challenges related to usability, adaptability, and system interaction.
+
+As ERP systems evolve, organizations increasingly seek ways to extend their functionality without modifying core system components. External integrations, automation tools, and intelligent interfaces have become common approaches to enhance ERP capabilities while preserving system stability. However, these enhancements must be carefully designed to avoid introducing security risks, performance issues, or maintenance complexity.
+
+In recent years, artificial intelligence and automation technologies have gained attention as effective methods for improving ERP interaction and efficiency. AI-driven interfaces allow users to interact with systems more naturally, while automation platforms enable the execution of predefined workflows without manual intervention. Understanding the theoretical foundations of ERP architectures, AI interaction, and workflow automation is essential to designing a secure and scalable solution.
+
+Related Theory
+Enterprise Resource Planning systems have increasingly incorporated artificial intelligence to enhance usability, decision-making, and automation. Traditional ERP architectures rely on structured user interfaces and predefined workflows, which often limit flexibility and require extensive user training. To address these limitations, modern ERP vendors have introduced AI-driven assistants that enable conversational interaction, predictive insights, and automated task execution.
+
+Several commercial ERP platforms demonstrate this trend. SAP introduced Joule, an AI-powered assistant designed to support users across SAP applications by providing contextual insights, task recommendations, and natural language interaction. Similarly, Zoho Zia integrates AI capabilities into the Zoho ERP ecosystem, offering features such as conversational querying, anomaly detection, and intelligent automation. Microsoft has also embedded AI into its enterprise platforms through Dynamics 365 Copilot, which enables natural language interaction, automated reporting, and workflow assistance within ERP and CRM modules (Microsoft, 2023; SAP, 2023; Zoho, 2022).
+
+While these AI-enabled ERP systems improve accessibility and productivity, they are typically proprietary, tightly coupled to vendor platforms, and limited in transparency and customization. Additionally, AI-generated actions within enterprise systems introduce risks related to data security, incorrect query execution, and loss of contextual control if not carefully governed.
+
+To mitigate these risks, research emphasizes the importance of structured control layers between AI systems and enterprise data sources. Context-aware architectures separate schema understanding, request validation, and execution logic to ensure safe interaction. The Model Context Protocol (MCP) aligns with this approach by enforcing controlled access and validation when integrating AI with ERP systems.
+
+Workflow automation platforms complement AI interaction by enabling event-driven execution of business processes. Tools such as n8n allow organizations to automate repetitive tasks, enforce business rules, and integrate multiple systems without modifying ERP core logic. When combined with controlled AI interaction, workflow automation supports scalable and maintainable ERP enhancements.
+
+Together, AI-enabled ERP concepts, context-control mechanisms, and workflow automation form the theoretical foundation for the proposed solution, enabling intelligent yet secure interaction with enterprise systems.
+
+Used and Considered Technology 
+CategoryTechnology / ToolPurpose / Use CaseProgrammingPython
+
+
+
+
+Core implementation language for the project. Used to build the Streamlit interface using the Streamlit Python library, MCP servers, secure database access layers, and integration logic with Odoo and n8n. Python was selected due to its native compatibility with Odoo, strong ecosystem for data processing, AI integration, and rapid prototyping capabilities.JavaScript
+
+
+
+Used in a limited manner for enhancements within n8n workflows for scripting logic and conditional automation steps (n8n GmbH, 2024). JavaScript is leveraged where required by tooling (n8n and web-based interactions), but it is not the primary application language (Flanagan, 2020; Mozilla Developer Network, 2024).Git
+
+Version control system used to manage source code, track changes, and maintain separation between experimental features and stable components. Git supports collaboration and ensures reproducibility of development and testing phases.AIAnthropic LLMs
+
+
+
+Used as the reasoning engine for interpreting natural language user input, generating structured intents, and providing analytical summaries (Anthropic, 2023a). Claude was chosen for its strong reasoning capabilities and suitability for controlled enterprise contexts (Anthropic, 2023b). Importantly, the LLM never directly accesses ERP data and operates strictly behind validation layers (Anthropic, 2023b; NIST, 2024).MCP Servers
+
+
+
+Core architectural contribution of this project. MCP servers act as an middle control layer between AI outputs and ERR operations (Microsoft, 2024). They enforce schema awareness, validation, access control, and business rules, ensuring that AI-generated suggestions are safe, auditable, and compliant with ERP constraints (NIST, 2024; ISO/IEC, 2022).ApplicationOdoo Community
+
+
+
+Serves as the ERP backend system for sales, inventory, purchasing, and basic CRM operations (Odoo S.A., 2024). The Community Edition was deliberately selected to ensure open-source compatibility and to demonstrate that advanced AI-assisted interaction can be achieved without modifying ERP core code or relying on enterprise-only features (Odoo S.A., 2024).
+Automationn8n
+
+Workflow automation engine used to implement business processes such as alerts, notifications, fraud detection rules, system health checks, and scheduled operations (n8n GmbH, 2024). n8n operates independently from the AI reasoning layer and can be triggered either automatically by ERP events or manually via the Streamlit interface (n8n GmbH, 2024; Streamlit Inc., 2023).
+OtherPostman
+Used during development and testing to validate API endpoints, including Odoo JSON-RPC calls, MCP server endpoints, and n8n webhooks. Postman supports functional testing and debugging of integration flows.VMWare
+
+
+
+
+Used as part of the broader infrastructure environment to host virtualized services during development and testing. This includes ERP instances and supporting services.
+Operating System (Windows Servers & Windows 10)
+
+
+
+Development and hosting environment for virtual machines, Odoo instances, and supporting services. The choice reflects a realistic enterprise deployment context rather than an optimized cloud-only setup.PostgreSQL
+
+
+Primary relational database used by Odoo and accessed indirectly through validated MCP execution layers. PostgreSQL was selected due to its robustness, strong support for relational ERP schemas, and compatibility with Odoo Community Edition.Docker
+Used to containerize selected services and dependencies to simplify deployment, improve reproducibility, and isolate components. Docker supports the modular and decoupled architecture promoted by the project.Cloudflare
+
+Used at the networking and security level to provide basic protection, routing, and external access control. Its role is supportive and infrastructural rather than application specific.Table 3 - List of technologies used
+
+Scope Clarification
+Some technologies listed above (such as VMWare, operating systems, Docker, PostgreSQL and Cloudflare configuration) are part of the shared infrastructure environment and are not the primary focus of this thesis.
+
+For detailed explanations of infrastructure design, deployment architecture, and system hosting decisions, refer to my colleague’s thesis document.
+
+
+
+
+
+
+
+
+
+
+Related Work & Literature Review
+Enterprise Resource Planning (ERP) systems have long been recognized as critical infrastructures for integrating and managing organizational processes across finance, supply chain, sales, and human resources. However, traditional ERP systems often require specialized technical knowledge and manual effort to extract insights from large volumes of structured data. Recent advances in artificial intelligence (AI), particularly in machine learning and natural language processing, have enabled both academic researchers and industry vendors to explore AI-enhanced ERP systems that enhance usability, automation, and decision support (Mhaskey, 2024).
+
+AI Integration in ERP Systems
+Academic literature highlights that the integration of AI into ERP environments can significantly improve operational efficiency, predictive capabilities, and user interaction. Mhaskey (2024) identifies key opportunities of AI-ERP integration, including automated decision support, anomaly detection, and intelligent process optimization, while also emphasizing challenges such as data governance, system complexity, and trust in AI-generated outputs. These findings underline the importance of controlled and explainable AI architectures when integrating generative models with mission-critical enterprise systems.
+
+Recent research on generative AI agents for enterprise workflows demonstrates that agent-based and modular architectures can reduce manual workload and improve the accuracy of complex business processes. Studies show that AI agents capable of interpreting user intent and coordinating task execution can outperform traditional rule-based systems, particularly in financial and operational contexts (Zhang et al., 2025). However, these works also stress the need for strong validation mechanisms to prevent erroneous or unsafe actions.
+
+
+SAP Joule: Generative AI in Enterprise ERP
+A famous industrial example of AI-enhanced ERP is SAP Joule, SAP’s generative AI copilot embedded within its cloud-based enterprise applications. Joule enables users to interact with ERP data through natural language, receive contexed insights, and automate business tasks across domains such as finance, procurement, and supply chain management (SAP, 2023).
+
+SAP Joule employs AI agents that operate across multiple ERP modules, providing predictive insights and workflow recommendations based on real-time enterprise data. Industry analyses indicate that Joule aims to reduce load for users by abstracting technical complexity and enabling conversational access to business intelligence (ResolveTech, 2024). While its effective within SAP’s ecosystem, Joule is tied to SAP’s cloud infrastructure, limiting its applicability to open-source or modular ERP environments.
+
+Zoho Zia: AI Assistance Across Business Suites
+Another widely adopted AI-enhanced enterprise assistant is Zoho Zia, which operates across Zoho’s CRM and SaaS platform. Zia provides features such as predictive analytics, anomaly detection, workflow recommendations, and conversational querying using natural language interfaces (Zoho, 2024).
+
+Recent developments in Zia include the introduction of proprietary large language models and agent-building tools that allow organizations to create customized AI agents without extensive programming knowledge (Inc42, 2024). Zia’s design demonstrates how AI can be deeply embedded into business software to support decision-making and operational efficiency. However, similar to SAP Joule, Zia is designed as an integrated feature of a closed-source commercial ecosystem rather than as a solution layer that is applicable to third-party ERP systems.
+
+
+Architectural Trends in AI-ERP Interaction
+Beyond commercial platforms, academic research increasingly explores architectural patterns for safely connecting large language models with structured enterprise systems. Recent studies propose multi-layered and dual-agent architectures that separate natural language reasoning from execution logic, improving reliability and reducing the risk of unintended system actions (Li et al., 2025). These approaches emphasize schema awareness, validation layers, and strict control of AI-generated outputs before execution.
+
+Additionally, event-driven orchestration frameworks combined with AI reasoning have been shown to enhance automation, anomaly detection, and adaptive response in ERP workflows (Kumar & Patel, 2025). These findings support the argument that AI should function as an assistive and advisory component within ERP systems rather than as an unrestricted autonomous actor.
+
+Summary and Positioning of This Work
+In summary, existing literature and industrial solutions demonstrate a clear trend toward AI-augmented ERP systems that improve usability, automation, and analytical capabilities. Commercial solutions such as SAP Joule and Zoho Zia validate the practical value of conversational AI and intelligent agents in enterprise environments, while academic research highlights the architectural and governance challenges involved.
+
+3. Designing
+Requirements and Design 
+The methodology adopted in this project follows a design heavy engineering approach, combining requirement analysis, architectural modeling, and validation. Given the complexity of ERP systems, Huge focus was placed on concerns, security, and controlled interaction between AI components and enterprise data.
+The methodology is structured around two main phases:
+requirements and analysis.
+system design and modeling using formal representations such as UML diagrams and workflow models.
+Requirements Analysis
+The requirements for the system were derived from both functional needs and non-functional constraints commonly observed in small and medium-sized enterprises (SMEs) using ERP systems.
+Functional Requirements
+The system was required to:
+* Allow users to interact with ERP data using natural language queries
+* Translate user input into structured, executable operations
+* Retrieve and analyze ERP data without modifying the ERP core
+* Visualize results using tables and charts
+* Trigger automated business workflows (e.g., alerts, notifications)
+* Support read-only analysis queries and controlled action requests
+These requirements directly informed the design of the user interface, AI reasoning layer, and automation workflows.
+Non-Functional Requirements
+In addition to functional goals, the system was obliged by several critical non-functional requirements:
+* Security: Prevent unauthorized operations
+* Explainability and auditability: Ensure that all AI-generated actions can be traced and validated
+* Modularity: Allow individual components (UI, AI, validation, automation) to evolve independently
+* Scalability: Support future extensions without redesigning the ERP core
+* ERP integrity: Avoid any modification to Odoo’s internal source code
+These constraints strongly influenced architectural decisions and justified the introduction of a dedicated validation and control layer.
+System Design Approach
+To address the identified requirements, layered architecture was adopted. The design explicitly separates user interaction, AI reasoning, validation, execution, and automation, minimizing combination between components.
+Formal modeling techniques were used to ensure clarity and correctness before implementation.
+
+
+
+
+
+
+
+UML Diagrams
+
+Purpose of Modeling Approach
+UML and system architecture diagrams were chosen as the main modeling approach for this thesis, since they offer standardized way to describe complex software systems. Because this project combines multiple components like user interface, large language models, validation servers, ERP systems, databases, and automation engines, modeling was necessary to ensure clarity, correctness, and traceability before implementation.
+
+UML diagrams were used to:
+* Capture functional requirements from the user perspective
+* Describe component responsibilities and system boundaries
+* Model interaction flows between AI, validation layers, and ERP services
+* Reduce implementation ambiguity and design risks
+
+This approach aligns with established software engineering best practices for enterprise systems and supports reproducibility.
+
+
+
+
+
+
+
+
+
+
+Use case diagram
+This use case diagram illustrates the primary interactions between end users and the AI-augmented ERP system. The main actor is the user, who interacts with the system through natural language queries and action requests.
+
+
+The use case diagram presents a high-level view of the system from the user’s perspective, defining the functional scope and system boundaries. It shows how users interact with the system through natural language queries while separating away internal implementation details. also, the diagram shows that users do not interact directly with the ERP or database, reinforcing the design principle that all operations are mediated through controlled system components.
+
+
+
+Sequence Diagram
+The sequence diagram models the step-by-step interaction between system components when a user submits a natural language request. It highlights the order of operations and enforces separation of responsibilities.
+
+
+The sequence diagram illustrates the runtime interaction flow between the user interface, AI reasoning component, validation layer, and ERP backend. It demonstrates that structured intents generated by the language model are always validated before execution and that the LLM never directly accesses ERP data. Invalid or unauthorized requests are rejected early, ensuring system safety, auditability, and controlled AI behavior.
+
+
+
+Activity diagram
+The activity diagram represents the internal decision-making flow within the MCP servers. It focuses on validation logic rather than component interaction.
+
+
+Figure 3 - Activity Diagram for MCP Execution
+
+The activity diagram models the internal control logic of the MCP layer, showing how structured intents are processed through validation steps before any ERP call is executed. Decision nodes represent key checkpoints (e.g., intent validity, model/field validation, authorization, and business rule compliance). Requests that fail any check are rejected immediately, ensuring early failure handling, system safety, and auditable behavior through consistent logging and controlled execution.
+
+
+System Architecture
+Deployment and Automation Architecture Diagram
+A deployment or infrastructure architecture diagram is used to describe where system components are hosted, how they are interconnected, and how data and control flow across network boundaries. Unlike UML behavioral diagrams (such as sequence or activity diagrams), this type of diagram emphasizes runtime environment, hosting context, external integrations, and security boundaries rather than execution logic.
+
+This diagram presents the automation focused architecture of the system, different than any conversational interface. External services are securely exposed to the internal environment through a Cloudflare Tunnel, preventing direct public access to internal components.
+
+The n8n automation platform serves as the central layer, with credentials stored in and executing workflows that integrate external services, MCP servers, and the Odoo ERP system. MCP servers, deployed in Docker containers. Odoo runs on a dedicated application server and interacts with its PostgreSQL database.
+
+
+
+
+
+
+4. Implementation
+This chapter presents an overview of the system implementation, focusing on the Python-based user interface chatbot and the automation workflows implemented using the n8n platform. The objective of this section is to describe how the previously defined architecture and design models were translated into a working system, without delving into low-level source code or configuration details.
+
+The implementation discussion concentrates on the interaction between the Python interface, the AI reasoning component, and the n8n workflows that orchestrate ERP access and automation logic. Attention is given to how user requests are processed, routed, and executed through these components in a controlled manner.
+
+Infrastructure-related aspects such as deployment configuration, containerization, MCP server hosting, Docker setup, and n8n platform installation are outside the scope of this chapter. These topics are addressed in detail in the accompanying thesis document of my colleague, which focuses on infrastructure and deployment concerns.
+
+Detailed code-level explanations, configuration snippets, and implementation-specific optimizations are intentionally deferred to later sections of this report (Appendix IV: Detailed Implementation).
+
+
+
+
+
+
+
+
+Implementation Steps
+
+StepImplementation FocusDescription4ERP IntegrationConfiguration of Odoo community and implementation of demo data and enabling developer mode for testing.1Python Interface SetupDevelopment of a lightweight Python-based interface to accept user input, forward requests to the automation platform and display structured results.2Workflow design for AI chatbotIntegration of the Anthropic Claude API, MCP and Python code in n8n to receive queries and generate structured requests.3MCP IntegrationImplementation of MCP-based routing logic to select the appropriate execution path 5Automation Workflow DesignCreation of n8n workflows to handle ERP data retrieval, external service integration, and event-driven automation logic.6TestingValidation of complete request flows from user input to ERP response and automation execution.N/AInfrastructure DeploymentDeployment and hosting of MCP servers, n8n, and supporting services (out of scope for this thesis; refer to colleague’s document).Table 4 - Implementation steps
+
+
+
+ERP Integration 
+After Odoo community is installed and is connected to our database (refer to my colleague thesis for this part on the implementation of these parts) we now have access to Odoo and need to create dummy data and enable developer mode for further testing.
+
+
+Figure 5 - Odoo dashboard
+
+In settings we enable these options as it will give us ERP data to test with and further access to Odoo’s tools with developer mode
+
+
+Figure 6 - Odoo settings
+
+After enabling these settings, we can see that the dummy data have appeared and is ready for testing.
+
+
+Figure 7 - Odoo demo assets
+
+
+
+Figure 8 - Odoo demo assets 2
+
+We also need to install such apps in Odoo from the apps module to further show the capabilities and provide more test use-cases.
+
+
+Figure 9 - Odoo app module
+
+
+For Odoo REST API testing we go to the web and put (http://localhost:8069/web/health) to ensure the API is working and is ready to be used on other tools.
+
+
+Figure 10 - Odoo REST API health check
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Python Interface Setup
+
+The Python interface serves as the main user interaction layer and was developed using Visual Studio Code (VS Code). The implementation is based on Streamlit python library for the user interface, with supporting libraries such as Requests for API communication and Pandas and Matplotlib for data handling and visualization.
+
+The goal of this is to provide a lightweight and reliable interface that captures user input, forwards requests to AI and automation components, and displays validated ERP results.
+
+
+Figure 11 - Python code on VSCode
+
+Imports and why they exist
+* streamlit: builds the web UI (chat, sidebar, buttons, layout, session state).
+* requests: sends HTTP POST requests to the n8n webhook.
+* json: parsing webhook responses + formatting dict/list responses into readable JSON.
+* time: used for the “typewriter” streaming effect.
+* pandas: converts detected structured data into DataFrames (tables).
+* plotly.express / plotly.graph_objects: generates interactive charts (bar/line/pie).
+* re: used for cleaning numeric values and detecting table formats.
+* io: utility import (used for file buffers).
+
+
+A more detailed description of the Python interface implementation, including source code and configuration details, is provided in (Appendix IV: Detailed Implementation).
+
+
+Workflow design for AI chatbot
+
+This subsection describes the design of the n8n workflow responsible for handling AI-assisted query processing. The workflow integrates the Anthropic Claude API, the MCP tool selection layer, and the Python interface to receive user queries and generate structured requests for execution.
+
+Communication between the Python interface and n8n is implemented using webhooks, allowing user queries to be forwarded asynchronously to the workflow engine. This design centralizes AI reasoning and tool orchestration within n8n, providing controlled access to MCP and external services while keeping the Python interface lightweight. Implementing this logic in n8n also enables future work potential, such as additional tools, services, or execution paths that can be introduced into the workflow without modifying the core user interface or ERP integration logic.
+
+(Details regarding the installation, deployment, and configuration of the n8n platform are addressed in the thesis document of my colleague.)
+
+
+After the n8n automation platform is installed and configured we enter it through the web by accessing the domain that was given to the system during the installation
+
+
+Figure 12 - n8n main dashboard
+
+As we can see here, we are greeted with an overview dashboard, and for creating a new workflow we simply clicked on the Create workflow button on top right.
+
+n8n workflows are implemented through a visual drag-and-drop interface where each node represents a processing step and connections define execution order. Node configuration is handled through parameter panels, while sensitive values such as API keys are stored in the Credentials system and referenced by nodes at runtime.
+
+
+Figure 13 - n8n workflow canvas
+
+
+
+Figure 14 - n8n workflow canvas node selection
+
+
+
+Figure 15 - n8n workflow canvas node selection 2
+
+
+
+Figure 16 - n8n node deployment
+
+
+
+Figure 17 - n8n node parameters
+
+This figure shows the parameter configuration of a webhook node in n8n, which is accessed by selecting a node on the workflow canvas. In n8n, each node exposes a dedicated configuration panel where its behavior and input/output parameters can be defined without writing code.
+
+In this example, the webhook node is configured to accept HTTP POST requests and serves as the entry point of the workflow. The automatically generated webhook URL is used by the Python interface to submit user queries in JSON format. The node is set to respond immediately, allowing downstream nodes to process the request while ensuring a synchronous response can be returned to the caller.
+
+
+Figure 18 - n8n AI Agent node
+
+
+
+Figure 19 - n8n AI Agent node chat model selection
+
+This is an example of the configuration of the AI Agent node within the n8n workflow. The agent is connected to a webhook trigger and is configured by selecting a language model from n8n’s model library, in this case an Anthropic chat model. The visual interface allows models, tools, and memory components to be attached to the agent through drag-and-drop without embedding logic directly in application code
+
+
+Figure 20 - n8n AI Agent node chat model selection 2
+
+
+Figure 21 - n8n AI Agent node chat model credentials
+
+
+Figure 22 - n8n AI Agent node chat model variant selection
+
+These steps show how an AI chat model is connected to an AI agent node in n8n by selecting a specific language model (Such as: OpenAI, Claude, Google’s Gemini etc..), configuring the required API credentials, and having the option to choose any of the available model variants from the API key, such as in this instance: Claude Sonnet 4.5, Opus 4.5, and Haiku 4.5.
+
+
+Figure 23 - n8n MCP Client node
+
+
+
+Figure 24 - n8n Respond to Webhook node
+
+This figure shows the final stage of the n8n workflow, where the output generated by the AI agent and MCP Client and is passed to the Respond to Webhook node. This node returns the processed response synchronously to the calling Python interface, completing the request and response cycle between the user interface and the automation workflow.
+
+
+Figure 25 - n8n AI Agent node parameters
+
+This figure shows the configuration of the AI Agent node in n8n, where the user’s message is extracted directly from the incoming webhook payload. The prompt field is mapped to the webhook body ({{ $json.body.text }}), allowing the agent to receive and interpret the user query. This setup ensures that all incoming requests are processed consistently by the language model before any tool selection or execution occurs.
+
+
+Figure 26 - n8n Respond to Webhook node parameters
+
+This figure shows the configuration of the Respond to Webhook node in n8n, which sends the AI agent’s output back to the calling Python interface. The response body is mapped to the AI agent’s generated output ({{ $json.output }}), enabling a synchronous request and response interaction between the chatbot interface and the workflow.
+
+
+Figure 27 - n8n MCP Client node parameters
+
+This figure illustrates the MCP client configuration used to connect the AI agent to a local MCP server, with further details provided in the MCP Tool Integration section.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+As a result, now we have a dedicated workflow to receive chat queries from the Python interface, route them through the AI agent and MCP tool selection and return the final response back to the interface.
+
+
+Figure 28 - n8n AI chatbot workflow
+
+This workflow is connected to the Python interface using an HTTP webhook: the Python application sends the user query as a POST request to the workflow’s webhook URL, and n8n returns the processed result through the response node.
+The workflow is composed of the following nodes:
+
+* Webhook (Trigger): Entry point of the workflow. It receives the incoming POST request from the Python interface containing the user query and any relevant metadata (e.g., session/user context).
+
+* AI Agent: Core orchestration node. It coordinates the reasoning step and selection tool.
+* Anthropic Chat Model: Interprets the natural language query and produces a structured intent or intermediate reasoning output.
+
+* MCP Client (inside the agent): Executes tool selection and calls the appropriate MCP tool based on the model’s output, enabling controlled interaction with ERP-related actions.
+
+* Respond to Webhook: Sends the final structured output (e.g., extracted data, tool result, and/or formatted response) back to the Python interface as the HTTP response, allowing the UI to display the result immediately.
+
+This design keeps the Python interface lightweight while centralizing AI-driven routing and tool execution in n8n, making it easier to extend the system with additional tools or workflows in the future.
+
+(Further details on node parameters, workflow routing and the complete workflow JSON are provided in Appendix IV: Detailed Implementation.)
+
+
+
+
+
+
+
+
+
+
+
+
+MCP Integration
+
+The MCP layer is integrated as a tool selection and execution interface between the AI agent and the ERP system. Within the implementation, MCP is accessed from the n8n workflow through an MCP client configured to communicate with the MCP service exposed on localhost:8000.
+
+
+Figure 29 - n8n MCP Client tool node
+
+
+Figure 30 - n8n MCP Client tool node parameters
+
+When the AI agent produces a structured request, the n8n workflow routes this request to the appropriate MCP tool via this local endpoint. Each tool targets a specific ERP-related operation and executes it through Odoo’s JSON-RPC API, ensuring that the language model never interacts directly with the ERP system.
+
+This approach provides a clear separation between AI reasoning and ERP execution while allowing new tools to be added to MCP without modifying the Python interface or core workflow logic. 
+
+Deployment and containerization details of the MCP service are outside the scope of this chapter and are covered in the thesis document of my colleague.
+
+
+
+
+
+
+Automation Workflow Design
+
+Following the explanation of n8n’s configuration, node management, and execution model, this section demonstrates how these concepts are applied to design an automated workflow. The workflow integrates AI reasoning, tool selection, and external system interaction to enable end-to-end automation in a controlled and extensible manner.
+
+Building on the previous explanation of how n8n workflows are configured and executed, this section presents an automated workflow designed to support sales and CRM operations. The workflow retrieves incoming emails from the sales team, assesses whether the message represents a potential business opportunity, and then interacts with Odoo to manage the corresponding CRM data. If the sender is not already stored as an existing contact, the workflow uses MCP tools to create a new contact in Odoo, followed by the creation of a CRM opportunity (lead). Finally, the workflow notifies the CRM team to ensure timely follow-up and operational continuity.
+
+
+Figure 31 - n8n Email Trigger node
+
+This workflow begins with an Email Trigger (IMAP) node, which continuously monitors the sales inbox for incoming messages. When a new email is received, it automatically initiates the workflow without manual intervention.
+
+
+Figure 32 - n8n Email Trigger node parameters
+
+This configuration shows how the IMAP Email Trigger node is connected to the sales inbox using secure credentials. The node is configured with the mail server host, port, and authentication details, allowing n8n to continuously monitor incoming emails and automatically initiate the workflow when new messages are received.
+
+Figure 33 - n8n automated workflow overview
+
+
+After an email is received, its content is processed by an LLM-based email filtering node, which evaluates whether the message represents a potential sales opportunity using semantic analysis. The result is passed to a conditional decision node (“If it’s opportunity”), which routes the workflow accordingly. If the email is classified as a valid opportunity, it proceeds to the MCP Client for controlled interaction with Odoo CRM operations. If not, the message is routed to an archive/logging step, ensuring traceability without triggering unnecessary ERP actions.
+
+
+Figure 34 - n8n LLM filtering node prompt configuration
+
+This view shows the prompt configuration used for LLM-based email classification. The email subject and body are dynamically injected into the prompt using n8n expressions, allowing the model to analyze real incoming messages. The prompt explicitly enforces a strict JSON output schema, ensuring the response includes opportunity classification, contact details, and opportunity context. This structured output enables reliable downstream decision-making and seamless integration with MCP and Odoo CRM operations.
+
+
+Figure 35 - n8n If statement node parameters
+
+This conditional node evaluates the structured JSON output produced by the LLM email classification step. By parsing the opportunity boolean field, the workflow determines whether the email represents a valid sales opportunity. Emails classified as opportunities are routed to subsequent CRM automation steps, while non-relevant messages are safely diverted, ensuring controlled and efficient workflow execution.
+
+
+Figure 36 - n8n MCP Client node parameters configuration
+
+This MCP Client node queries the Odoo ERP system to determine whether the email sender already exists as a contact. The node connects to the locally hosted MCP server via http://localhost:8000 and invokes the search_records tool on the res.partner model, using the sender’s email address as the search criterion. This step ensures that duplicate contacts are avoided and that subsequent CRM actions are performed on validated ERP data.
+
+
+Figure 37 - n8n automated workflow overview 2
+
+After verifying whether the contact already exists in Odoo, the workflow evaluates the result using a conditional node (“If contact doesn’t exist”). If the contact is missing, a lightweight JavaScript processing node prepares the required data structure, which is then passed to an MCP Client to create a new contact record in Odoo. If the contact already exists, this step is skipped. In both cases, the workflow converges and forwards the validated contact information to a second AI agent, which prepares the data needed for CRM opportunity creation and notification steps.
+
+
+Figure 38 - n8n MCP Client node parameters configuration 2
+
+
+
+Figure 39 - n8n MCP Client node parameters configuration 3
+
+
+This step builds the JSON payload required to create a new contact in Odoo. It extracts the sender’s name and email from the incoming IMAP email data, assigns default contact attributes (company type and customer rank), and formats the data into the structure expected by the MCP client. This prepared object is then passed to the MCP tool for contact creation when no existing contact is found.
+
+
+Figure 40 - n8n JavaScript node code
+
+This JavaScript node prepares the data needed to create a CRM opportunity in Odoo. It extracts the email subject and content from the IMAP trigger, retrieves the related contact ID from the previous MCP search, and builds a structured payload (title, type, sender email, and description). This formatted output is then passed to the next MCP client to create the opportunity record automatically.
+
+
+Figure 41 - n8n MCP Client node parameters configuration 4
+
+This node takes the JSON payload produced by the previous JavaScript step (model + values such as name, type, email_from, description, partner_id) and sends it to the MCP server at http://localhost:8000/ using the create_record tool. In other words, it’s the step that actually writes the new CRM opportunity/lead into Odoo based on the structured data extracted from the email.
+
+
+Figure 42 - n8n automated workflow overview 3
+ 
+
+Figure 43 - n8n LLM filtering node prompt configuration 2
+
+This step builds a human-readable message with an AI chat model, summarizing the newly created opportunity (ID, subject, and email content) by combining data from the previous MCP and email nodes, which is then used to notify the relevant CRM or sales team about the detected opportunity.
+
+
+Figure 44 - n8n Send Email node parameters
+
+This final node sends an email notification to the CRM team. It uses an SMTP credential to send a message containing the processed output from the workflow (the opportunity summary generated earlier). In this setup, the sender and recipient emails are for testing purposes, but in production this would notify the relevant CRM or sales team when a new opportunity is created.
+
+
+
+
+
+
+
+5. Testing
+Test Plan
+Testing validates the correctness and reliability of both the AI chatbot and the automated workflows implemented in n8n.
+
+The AI chatbot is tested by sending manual prompts through the chat interface to verify correct input handling, tool selection via the MCP server, and response generation. Logs are monitored to ensure that the correct MCP tools are invoked and that responses are returned in the expected format.
+
+The automation workflow is tested by sending controlled test emails to the sales inbox. Emails are classified using an LLM to determine whether they represent sales opportunities. For valid opportunities, the workflow verifies contact existence in Odoo, creates missing contacts, generates CRM leads, and sends notification emails to the CRM team. Execution logs and Odoo records are reviewed to confirm correct behavior.
+
+Finally, end-to-end testing ensures seamless integration between n8n, LLMs, the MCP server, and Odoo, while basic error scenarios (invalid input or missing data) are checked to ensure good handling.
+
+
+
+
+
+
+
+
+
+
+Participants 
+
+IDNameAgeBackground1Sayed Hashem Yusuf21ICT MIS student and primary developer of the project, responsible for system architecture design, AI integration, Python interface development, n8n workflow implementation, ERP integration, and testing activities.2Ali Alaliwat21ICT MIS student and system infrastructure engineer for the project, responsible for deployment planning, system administration, containerization, service handling, and infrastructure-related validation.3Ali Jawad19ICT Cyber student with experience in automation workflows, and security fundamentals, contributing to security review and technical evaluation.Table 5 - Participants for testing
+
+
+
+
+
+
+
+
+
+
+
+
+
+Functional Requirements Test Cases and Results
+
+This section evaluates the system against its defined functional requirements by mapping each requirement to a corresponding test case. The tests focus on validating the correct behavior of the AI chatbot, the MCP-based tool selection, and the automated workflows implemented in n8n. Test cases were executed using controlled inputs, and the observed results were compared against expected outcomes to verify system correctness and reliability.
+
+Test IDFunctional RequirementTest DescriptionExpected ResultActual ResultStatus1Accept natural language inputSubmit a query through the Python chat interfaceQuery is received and forwarded to n8nQuery successfully forwardedPass2AI intent interpretationSend a business-related queryAI correctly interprets intentCorrect interpretation returnedPass3Tool selection via MCPSubmit a query requiring ERP accessCorrect MCP tool is selectedCorrect tool invokedPass4ERP data retrievalRequest ERP data via chatbotData retrieved from OdooCorrect ERP data returnedPass5Chatbot response deliveryExecute full chatbot flowResponse returned to UIResponse displayed correctlyPass6Email ingestionSend test email to sales inboxWorkflow triggered automaticallyEmail detected successfullyPass7Opportunity classificationSend opportunity-related emailEmail classified as opportunityCorrect classificationPass8Contact lookupProcess email from existing contactExisting contact detectedNo duplicate createdPass9Contact creationProcess email from new senderNew contact created in OdooContact created successfullyPass10CRM opportunity creationValid opportunity emailCRM lead createdLead created correctlyPass11Notification deliveryComplete opportunity workflowCRM team notifiedNotification email sentPassTable 6 – Testing use cases results
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Functional Testing Evidence
+
+
+Figure 45 - n8n AI chatbot workflow overview
+
+This figure shows the webhook node in listening mode, where n8n is waiting for an incoming HTTP request on the test URL. Once a request is received, the webhook immediately triggers the workflow, passing the user input to the AI Agent for processing.
+
+
+Figure 46 - Python interface using streamlit library
+This test verifies that the chatbot interface is correctly initialized and operational. The interface loads successfully, shows an Online status, and confirms an active connection to the n8n webhook. This indicates that the frontend is ready to send user inputs to the backend once messages are submitted, validating the interface setup and connectivity prior to functional interaction testing.
+
+Figure 47 - Python interface processing
+
+
+Figure 48 - n8n AI chatbot workflow processing
+
+This test verifies the end-to-end functionality of the AI chatbot. A natural language query is submitted through the chatbot interface, which confirms that user input is successfully sent to the n8n webhook. The chatbot enters a processing state (“Genie is thinking…”), indicating that the request has reached the backend, triggered the workflow, and is being processed by the AI agent and MCP tools. This validates correct interaction between the user interface, webhook listener, and backend logic prior to returning ERP-based results.
+
+
+Figure 49 - Python interface query result
+
+This test confirms that the chatbot operates correctly end to end. After submitting a natural language query through the chatbot interface, the request is successfully processed via the n8n webhook, interpreted by the AI agent, and routed through MCP to retrieve ERP data. The chatbot returns a structured table displaying the last five sales orders, including totals and a revenue summary, demonstrating accurate data retrieval, reasoning, and response formatting. This verifies that the chatbot can translate user queries into ERP actions and present meaningful business insights through the interface.
+
+
+Figure 50 - Python interface data analysis of query testing
+
+
+Figure 51 - n8n AI Agent node process log
+
+This test demonstrates that the AI agent correctly translates a natural language user query into a structured MCP tool call. The Anthropic chat model interprets the human request, selects the appropriate MCP tool (e.g., record search), defines the required parameters, and executes the call, confirming accurate intent understanding.
+
+
+
+
+Functional Testing Evidence – Automated workflows
+
+
+Figure 52 - n8n automated workflow overview triggering
+
+This test ensures that the workflow listens to incoming emails correctly. An IMAP email trigger continuously keeps itself in an active waiting state monitoring the configured inbox. When a new email arrives, the trigger catches it and triggers the workflow. It ensures that the email connection, credentials, and the listening mechanism are all correct.
+
+
+Figure 53 - Sending Email to n8n node
+A test email with the subject “Chairs inquiry” and a simple sales related question was sent to the monitored inbox. Receiving this email confirms that the IMAP listener is active and able to capture incoming messages, which then triggers the workflow for further processing.
+
+
+Figure 54 - n8n LLM filtering node input result
+
+
+
+Figure 55 - n8n MCP Client node input result
+
+
+
+Figure 56 - n8n MCP Client node input result 2
+
+This test verifies that the AI-based email filtering component correctly understands and classifies incoming emails. The received message “Do you have chairs available for sale?” is passed to the LLM along with the email subject and body.
+
+As shown in the output, the model successfully identifies the email as a sales opportunity and returns a structured JSON response containing:
+* opportunity: true
+* Extracted contact information (email, company)
+* A short description of the opportunity
+
+This confirms that the LLM can reliably interpret natural language inquiries, distinguish sales related emails from non relevant messages, and produce machine readable output for other workflow steps.
+
+
+Figure 57 - Odoo automated CRM lead creation from n8n
+
+
+
+Figure 58 - Automated Email receiving from n8n
+
+As a result, the workflow automatically searched for the customer in Odoo, created a new contact if none existed, generated a CRM lead for the inquiry, and finally sent a notification email to the sales team.
+
+
+
+
+
+
+
+
+
+Acceptance Test Process and Results
+The acceptance testing verifies that the AI chatbot and automated workflows meet the defined requirements and operate correctly in a real-world usage scenario.
+
+Test IDTest ScenarioParticipant(s)Expected ResultActual ResultStatus1Submit a natural-language sales query via chatbotAli Jawad, Ali AlaliwatQuery is interpreted and routed to MCPQuery translated and tool invokedPass2Send a sales inquiry emailAli JawadEmail detected and classified as opportunityEmail classified correctlyPass3Search for existing contact in OdooSayed Hashem YusufContact found or marked as missingContact search executedPass4Create contact when none existsSayed Hashem YusufNew contact created in OdooContact created automaticallyPass5Create CRM lead/opportunitySayed Hashem YusufLead appears in CRM pipelineLead created correctlyPass6Notify sales teamAli AlaliwatNotification email sentEmail delivered successfullyPassTable 7 - Test process results
+
+
+
+
+
+
+
+
+Usability testing, statistics and logs
+
+Usability testing was conducted informally to evaluate the ease of use, learnability, and overall interaction quality of the system. The tests focused on the Python-based chatbot interface and the automated workflow outcomes.
+
+Ease of Use and Learnability
+Participants were able to understand and use the chatbot interface with minimal instruction. The natural language input mechanism allowed users to interact with the ERP system without prior technical knowledge of Odoo or workflow automation. The interface layout and response formatting were easy to follow.
+
+System Responsiveness
+During testing, the system demonstrated acceptable response times for both chatbot queries and automated workflows. AI-driven responses were typically returned within a few seconds, and automated email-based workflows executed without noticeable delay from the user’s perspective.
+
+
+Figure 59 - n8n responsiveness logs
+
+Figure 60 - n8n responsiveness logs 2
+
+Error Handling and Feedback
+When errors occurred (e.g., unavailable webhook or missing data), the system provided clear feedback through the interface or workflow logs. This helped users and developers quickly identify and resolve issues, reducing confusion during interaction
+6. Discussion
+This chapter discusses the outcomes of the project in relation to the original objectives and evaluates how effectively the proposed system addresses the challenges of ERP usability and automation. The discussion focuses on system functionality, observed strengths, and practical limitations identified during testing and evaluation.
+
+System Functionality
+The implemented system successfully demonstrates that AI-assisted interaction and workflow automation can be layered on top of an existing ERP system without modifying its core. Natural language queries submitted through the Python interface were correctly interpreted by the language model and routed through the MCP tool selection layer, enabling controlled access to ERP data. This confirms the possibility of using AI as an intermediary between users and complex enterprise systems.
+
+The automation workflows implemented in n8n further extend system functionality by enabling business processes, such as converting incoming sales emails into CRM opportunities. These workflows reduced manual effort and ensured consistency in data handling by automatically searching for contacts, creating missing records, generating opportunities, and notifying relevant teams.
+
+Overall, the system functioned reliably during testing and met its functional requirements. However, the effectiveness of AI-driven classification and interpretation remains dependent on prompt design and model behavior, highlighting the importance of controlled tool access and structured outputs. Despite these limitations, the results indicate that the proposed approach can significantly improve ERP accessibility and operational efficiency, particularly for small and medium-sized enterprises.
+
+Accomplished Objectives
+The objectives defined at the beginning of this project were largely achieved, demonstrating the feasibility and effectiveness of integrating AI and workflow automation with an existing ERP system without modifying its core.
+
+Objective CategoryObjectiveAchievement DescriptionStatusMain GoalImprove ERP usability and operational efficiencyAI-driven natural language interaction and automated workflows were successfully integrated with Odoo without modifying its core.AchievedTechnicalDevelop an AI-based chatbot for natural language ERP interactionA Python-based chatbot using an LLM was implemented, allowing users to query ERP data conversationally.AchievedTechnicalImplement MCP servers for secure ERP accessMCP was integrated as a tool selection layer to ensure controlled, context-aware ERP operations.AchievedTechnicalConnect chatbot to Odoo Community EditionThe system successfully interacts with Odoo via JSON-RPC for data retrieval and CRM actions.AchievedTechnicalBuild automated workflows using n8nMultiple workflows were implemented, including lead capture from emails, contact creation, opportunity creation, and notifications.AchievedTechnicalMaintain modular and scalable architectureClear separation between UI, AI reasoning, tool selection, automation, and ERP execution was maintained.AchievedBusinessReduce technical complexity for ERP usersUsers can interact with ERP functionality using natural language without ERP-specific knowledge.AchievedBusinessImprove efficiency through automationRepetitive tasks such as email-based lead processing were automated, reducing manual effort.AchievedBusinessSupport faster decision-makingAI-assisted access to ERP data enables quicker retrieval of relevant business information.AchievedBusinessReduce manual operations and IT dependencyAutomated workflows decreased reliance on manual ERP handling and continuous IT intervention.AchievedBusinessDeliver a flexible SME-ready solutionThe solution is modular, scalable, and suitable for startups and small to medium-sized enterprises.AchievedTable 8 - Objective completion
+
+Project Issues
+Several challenges were encountered during the development and evaluation of the project. One of the primary issues was managing the reliability and consistency of AI-generated outputs, particularly when interpreting unstructured natural language input. This required careful prompt design and structured output enforcement to ensure predictable behavior in downstream workflows.
+
+Integration complexity also presented challenges, as multiple components (Python interface, n8n workflows, MCP tools, and Odoo) needed to communicate reliably. Minor issues related to API connectivity, webhook availability, and service synchronization were addressed through testing and logging.
+
+Additionally, configuring automated workflows to handle cases such as duplicate contacts, incomplete email data, or weird user input required additional logic to prevent inconsistent ERP records. Despite these challenges, modular architecture allowed issues to be isolated and resolved without affecting the overall system stability.
+Backup Plan
+To face the potential failures during development and testing, backup strategies were put. In cases where the AI component produced unreliable or wrong output, manual prompt adjustments and fallback rule-based checks were used to ensure workflow continuity.
+
+If automated workflows failed due to connectivity or service unavailability, the system could fall back to manual ERP operations without data loss, as the ERP core remained unchanged. Local testing environments and test data were also maintained to allow rapid recovery and continued development in the event of system downtime.
+
+Overall, the backup plan reduced risk and maintained project continuity by ensuring that crucial project demonstrations and evaluations could continue even in the event of partial system failures.
+ 
+Future Plan and Work
+To further improve the system, a number of extensions and enhancements could be taken into consideration. Expanding the current scope of supported ERP modules to allow AI-assisted interaction with other business domains like accounting, human resources, and procurement is one possible course of action.
+
+Future research might also focus on enhancing prompt engineering, structured validation layers, or hybrid approaches that combine rule-based checks and AI reasoning to improve AI reliability. When interpreting user queries and unstructured inputs, this would further minimize ambiguity and enhance consistency.
+
+
+
+From an automation perspective, additional n8n workflows could be developed to support more complex business processes, such as approval chains, multi-step compliance checks, or cross-system integrations. Enhanced monitoring, logging, and analytics could also be introduced to improve observability and operational control.
+
+Finally, future iterations could explore user personalization, role-based interaction control, and performance optimization to support larger-scale deployments, making the solution more suitable for enterprise environments while maintaining its modular and scalable design. (for more information about this part refer to my colleague thesis document)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reflection of Experience
+Working on this project gave me important insight into the opportunities and difficulties of integrating AI with business systems. Prompt design, tool orchestration, and careful consideration of component interactions were necessary for the implementation of automated workflows and a natural language interface.
+
+One important lesson was the importance of controlled integration through MCP. which highlighted the significance of structured outputs from the AI model to enable predictable automation behavior. The practical difficulties of coordinating several services (Python interface, AI agents, and APIs) in a dependable and maintainable architecture were also brought to light by iteratively testing and debugging n8n workflows.
+
+Overall, the experience emphasized the importance of modular design, rigorous testing, and clear error handling in building enterprise grade AI-enhanced systems. It also enhanced understanding of how AI can significantly reduce manual effort in business processes when integrated correctly.
+
+Bahraini Perspectives
+Bahrain has demonstrated a strong national commitment to digital transformation and technology adoption, creating a supportive environment for AI-driven automation solutions. The Kingdom’s National Digital Economy Strategy emphasizes the adoption of advanced digital technologies to enhance productivity, support innovation, and improve the competitiveness of businesses, particularly small and medium-sized enterprises (SMEs) (Information & eGovernment Authority [iGA], 2023).
+
+In addition, Bahrain has taken active steps toward developing an AI-ready regulatory and policy framework that promotes innovation while encouraging responsible and ethical use of artificial intelligence. These efforts aim to position Bahrain as a regional technology hub by enabling collaboration between government, academia, and the private sector (ASAR Legal, 2023).
+
+Furthermore, initiatives led by organizations such as the Bahrain Chamber of Commerce and Industry highlight the importance of digital platforms, automation, and AI tools in modernizing business operations and supporting entrepreneurial growth. Such initiatives reflect a growing awareness of the role automation and intelligent systems can play in improving operational efficiency and decision-making within Bahraini enterprises (Bahrain Chamber of Commerce and Industry, 2023).
+
+Within this context, the proposed AI-enhanced ERP interaction and automation system aligns well with Bahrain’s national digital objectives by offering a scalable, SME-oriented solution that reduces manual workload, enhances ERP accessibility, and supports data-driven business practices.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LESPI
+Legal Issues
+The project was designed with legal considerations in mind, particularly regarding data access, privacy, and system modification. The solution interacts with Odoo Community Edition through officially supported APIs (JSON-RPC) without modifying the ERP core, ensuring compliance with software licensing and usage terms. Personal data processed by the system (e.g., customer names and email addresses extracted from sales emails) is handled strictly for business purposes and remains within the organization’s ERP environment. During testing, only dummy data and test email accounts were used, avoiding any legal risks related to real customer data. Additionally, API credentials and secrets are managed securely within n8n, reducing the risk of unauthorized access.
+
+Ethical Issues
+Ethical considerations were central to the system’s design, particularly concerning AI decision-making and data handling. The AI components are used as decision-support tools, not autonomous decision-makers, ensuring that final business responsibility remains with human users. The system avoids unrestricted AI access to ERP data by enforcing controlled tool usage through MCP, reducing risks associated with hallucinations or unintended actions. Transparency is maintained by generating structured outputs and logs, allowing human review of AI-driven decisions such as opportunity classification. These measures support ethical use of AI by prioritizing accountability, control, and explainability.
+
+Social Issues
+From a social perspective, the system aims to improve accessibility and inclusivity in ERP usage. By enabling natural language interaction, non-technical users can access ERP information and automate processes without specialized training. This reduces barriers for employees who may lack technical ERP expertise. However, there is also a need to ensure that automation does not fully replace human judgment, especially in sales and customer relationship contexts. The system therefore supports, rather than replaces, human roles by automating repetitive tasks while leaving strategic decision-making to staff.
+
+Professional Issues
+The project adheres to professional standards expected of ICT practitioners, including secure system design, modular architecture, and responsible AI integration. Best practices were followed in separating concerns between user interfaces, AI reasoning, automation workflows, and ERP execution. Proper documentation, testing, and validation were conducted to ensure system reliability and maintainability. Collaboration with a system infrastructure engineer further reinforced professional practices related to deployment and security. Overall, the project reflects professional responsibility by balancing innovation with reliability, security, and ethical awareness.
+
+
+7. Conclusion
+This project explored the integration of artificial intelligence and workflow automation with an existing ERP system to improve usability and operational efficiency. By layering AI-driven interaction and automated processes on top of Odoo Community Edition, the project demonstrated that ERP systems can be enhanced without modifying their core structure.
+
+A Python-based chatbot interface was developed to enable natural language interaction with ERP data, while n8n workflows were used to automate selected business processes such as lead capture, contact management, and opportunity creation. The use of Model Context Protocol (MCP) as a tool selection layer ensured controlled and secure access to ERP operations, preventing direct AI interaction with sensitive system components.
+
+The system's end-to-end execution across chatbot interactions and automation workflows, as well as its functional and acceptance requirements, were validated by testing results. In keeping with the project's business goals, usability observations also showed that the solution is simple to understand and appropriate for non-technical users.
+
+Overall, the project demonstrates the practical viability of AI-enhanecd ERP interaction and automation, particularly for startups and small to medium-sized enterprises. The modular and scalable architecture provides a strong foundation for future expansion, supporting additional ERP modules, more advanced automation, and enhanced AI-driven decision support.
+
+
+8. References:
+Mhaskey, S. (2024). Integration of artificial intelligence (AI) in enterprise resource planning (ERP) systems: Opportunities, challenges and implications. ResearchGate. https://www.researchgate.net/
+
+SAP. (2023). Generative AI with SAP: Joule – SAP’s generative AI copilot. SAP Community. https://community.sap.com/
+
+ResolveTech. (2024). Generative AI in SAP: How Joule is transforming ERP operations. https://resolvetech.com/
+
+Zoho. (2024). Zia: Generative AI for business. https://www.zoho.com/zia/
+
+Inc42. (2024). How Zoho is redefining enterprise AI with Zia LLM. https://inc42.com/
+
+Zhang, Y., Chen, L., & Roberts, M. (2025). Generative AI agents for enterprise workflows. arXiv. https://arxiv.org/abs/2506.01423
+
+Li, H., Wang, T., & Zhou, Q. (2025). Safe natural language interaction with enterprise databases using layered agent architectures. arXiv. https://arxiv.org/abs/2507.23429
+
+Kumar, R., & Patel, S. (2025). Event-driven AI orchestration in enterprise systems. arXiv. https://arxiv.org/abs/2511.15852
+
+ASAR Legal. (2023). AI in Bahrain: Regulated, strategic, and active – A new chapter in Bahrain’s digital transformation. https://www.asarlegal.com/ai-in-bahrain-regulated-strategic-active-a-new-chapter-in-bahrains-digital-transformation/
+
+Bahrain Chamber of Commerce and Industry. (2023). Bahrain Chamber hosts panel on digital business platforms. https://www.bahrainchamber.bh/bahrain-chamber-hosts-a-panel-on-how-to-create-and-sell-on-digital-business-platforms
+
+Information & eGovernment Authority. (2023). Bahrain digital economy. Kingdom of Bahrain. https://www.bahrain.bh/wps/portal/en/BNP/BahrainAtAGlance/DigitalEconomy
+Flanagan, D. (2020). JavaScript: The definitive guide (7th ed.). O’Reilly Media.
+Mozilla Developer Network. (2024). JavaScript guide. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide
+n8n GmbH. (2024). Code node documentation. https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/
+Anthropic. (2023a). Introducing Claude. https://www.anthropic.com/index/introducing-claude
+Anthropic. (2023b). Claude for enterprise. https://www.anthropic.com/solutions/enterprise
+National Institute of Standards and Technology. (2024). Artificial intelligence risk management framework (AI RMF 1.0). https://www.nist.gov/itl/ai-risk-management-framework
+International Organization for Standardization & International Electrotechnical Commission. (2022). ISO/IEC 25010: Systems and software engineering — Systems and software quality requirements and evaluation (SQuaRE). https://www.iso.org/standard/78176.html
+Microsoft. (2024). Model Context Protocol (MCP) overview. https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/model-context-protocol
+Odoo S.A. (2024). Odoo Community Edition documentation. https://www.odoo.com/documentation/17.0/
+n8n GmbH. (2024). n8n documentation: Workflow automation. https://docs.n8n.io/
+Streamlit Inc. (2023). Streamlit documentation. https://docs.streamlit.io/
+
+
+
+9. Appendices
+Appendix I: System and User Manuals
+This appendix provides two concise manuals intended for system handover:
+* System Administration Manual (for technical users)
+* End-User Manual (for non-technical users)
+Each section includes references to recommended screenshots to visually support the explanations.
+
+System Administration Manual
+Purpose
+This manual is intended for system administrators or technical staff responsible for operating, maintaining, or extending the system after deployment.
+
+System Overview
+The system consists of a Python-based chatbot interface, n8n workflow automation, an MCP server for controlled tool access, and Odoo Community Edition as the ERP backend. All components communicate via APIs and webhooks without modifying the ERP core.
+
+
+Figure 61 - AI chatbot process diagram
+Core Services and Runtime Status
+For correct operation, the following services must be running:
+* Odoo Community Edition
+* MCP server (http://localhost:8000)
+* n8n automation engine
+* Python chatbot application
+
+
+Figure 62 - n8n workflow selection dashboard
+
+
+Figure 63 - MCP Server runtime on docker
+
+
+
+Figure 64 - Python interface of AI chatbot initiation
+
+(for further explanation on runtime and function of the services please refer to my colleague’s thesis document)
+
+
+
+
+Workflow Management in n8n
+Automation logic is managed using n8n’s visual workflow editor. Workflows are created and maintained using drag-and-drop nodes, while API keys and credentials are securely stored using n8n’s credential management system.
+
+
+Figure 65 - n8n workflow canvas overview
+
+
+
+Figure 66 - n8n node dragging
+
+
+
+Figure 67 - n8n credentials manager dashboard
+
+
+
+Monitoring and Troubleshooting
+Workflow execution history and logs are available in n8n and can be used to diagnose connectivity, AI processing, or ERP interaction issues.
+
+
+Figure 68 - n8n log executions dashboard
+
+
+Figure 69 - n8n log executions player
+Appendix III: Detailed Design
+This appendix is skipped over, as the system design, architecture, and modeling diagrams were already explained in detail earlier in the report through UML diagrams, system architecture diagrams, and workflow representations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Appendix IV: Detailed Implementation
+Purpose of this Appendix
+This appendix provides the detailed implementation artifacts of the project, including the complete source code and key configuration elements used to implement the Python interface and the n8n workflows. It is intended to support reproducibility and to provide technical readers with access to the full implementation details referenced in the main report.
+
+Scope
+This appendix includes:
+* Python chatbot interface source code (Streamlit application)
+
+Infrastructure deployment details (n8n installation, Docker hosting, server setup) are outside the scope of this appendix and are documented in the accompanying thesis of my colleague.
+
+Python Code
+
+import streamlit as st
+import requests
+import json
+import time
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import re
+import io
+
+# Page Config
+st.set_page_config(
+    page_title="ERPGenie",
+    page_icon="",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+Imports and Dependencies
+This block imports the libraries required for building the Streamlit user interface, sending HTTP requests to n8n, processing structured data, and generating visualizations.
+
+Page Configuration
+This block configures the Streamlit application layout, title, and sidebar behavior to provide a wide, user-friendly interface for ERP interaction.
+
+
+st.markdown("""
+<style>
+    /* Import Inter Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* Global Styles */
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    .stApp {
+        background-color: #FFFFFF;
+        font-family: 'Inter', sans-serif !important;
+    }
+    
+    /* Header/Title */
+    h1 {
+        color: #31333F;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+    }
+    
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background-color: #714B67; /* Requested Purple */
+        border-right: 1px solid #5e3b56;
+    }
+    
+    /* Sidebar Text Overlay */
+    section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] span, section[data-testid="stSidebar"] div, section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+        color: #FFFFFF !important;
+    }
+
+    /* Fixed n8n Webhook opacity/contrast */
+    section[data-testid="stSidebar"] code {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: #FFFFFF !important;
+        font-weight: bold;
+    }
+    
+    /* Chat Input Styling */
+    .stChatInputContainer {
+        padding-bottom: 2rem;
+    }
+    
+    .stChatInputContainer textarea {
+        background-color: #31333F !important; /* Dark background */
+        color: #FFFFFF !important; /* White text */
+        caret-color: #FFFFFF;
+        -webkit-text-fill-color: #FFFFFF !important;
+        border: 1px solid #555 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Input Placeholder Color */
+    .stChatInputContainer textarea::placeholder {
+        color: #DDDDDD !important; /* Light placeholder */
+        -webkit-text-fill-color: #DDDDDD !important;
+        opacity: 0.8;
+    }
+    
+    /* Hide Streamlit stuff */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    
+    /* Ensure Header is transparent but visible so buttons work */
+    header[data-testid="stHeader"] {
+        background: transparent;
+    }
+
+    /* User Message Bubble */
+    .stChatMessage[data-testid="stChatMessage"] {
+        background-color: transparent;
+        border: none;
+    }
+
+    div[data-testid="stChatMessageContent"] {
+        background-color: #F0F2F6;
+        border-radius: 12px;
+        padding: 1rem;
+        color: #31333F;
+        border: 1px solid #E0E0E0;
+    }
+    
+    /* Visualization Buttons Styling */
+    .viz-button {
+        margin-right: 8px;
+        margin-top: 8px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+Custom UI Styling (CSS Injection)
+This block injects custom CSS into the Streamlit application to define the visual appearance of the interface, including fonts, colors, sidebar styling, chat input design, and message layout, improving usability and visual clarity.
+
+# ===== DATA PARSING & VISUALIZATION HELPERS =====
+
+def clean_numeric_value(value):
+    """Clean numeric values by removing currency symbols, commas, etc."""
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, str):
+        # Remove currency symbols and commas
+        cleaned = re.sub(r'[$€£¥,]', '', value.strip())
+        try:
+            return float(cleaned)
+        except ValueError:
+            return None
+    return None
+
+def parse_table_from_text(text):
+    """
+    Attempt to parse tabular data from various formats:
+    - Markdown tables
+    - JSON arrays
+    - Pipe-separated values
+    - Simple key-value pairs
+    """
+    # Try to parse as JSON first
+    try:
+        data = json.loads(text)
+        if isinstance(data, list) and len(data) > 0:
+            df = pd.DataFrame(data)
+            return df
+        elif isinstance(data, dict):
+            # Single dict - convert to DataFrame
+            df = pd.DataFrame([data])
+            return df
+    except (json.JSONDecodeError, ValueError):
+        pass
+    
+    # Try to parse markdown table
+    lines = text.strip().split('\n')
+    table_lines = []
+    in_table = False
+    
+    for line in lines:
+        stripped = line.strip()
+        if '|' in stripped:
+            # Skip separator lines (---|---|---)
+            if re.match(r'^[\s|:-]+$', stripped):
+                in_table = True
+                continue
+            if stripped.startswith('|') or '|' in stripped:
+                in_table = True
+                table_lines.append(stripped)
+        elif in_table and stripped == '':
+            break
+    
+    if len(table_lines) >= 2:
+        try:
+            # Parse markdown table
+            headers = [h.strip() for h in table_lines[0].split('|') if h.strip()]
+            rows = []
+            for line in table_lines[1:]:
+                row = [cell.strip() for cell in line.split('|') if cell.strip()]
+                if len(row) == len(headers):
+                    rows.append(row)
+            
+            if rows:
+                df = pd.DataFrame(rows, columns=headers)
+                return df
+        except Exception:
+            pass
+    
+    # Try to find key-value patterns (e.g., "Product: 100", "Sales: $500")
+    kv_pattern = r'^[\s-]*([A-Za-z\s]+):\s*(.+)$'
+    kv_pairs = []
+    for line in lines:
+        match = re.match(kv_pattern, line.strip())
+        if match:
+            key, value = match.groups()
+            kv_pairs.append({'Category': key.strip(), 'Value': value.strip()})
+    
+    if len(kv_pairs) >= 2:
+        df = pd.DataFrame(kv_pairs)
+        return df
+    
+    return None
+
+def is_graphable(df):
+    """Check if a DataFrame has numeric columns that can be graphed."""
+    if df is None or df.empty:
+        return False
+    
+    # Check if there's at least one numeric column
+    for col in df.columns:
+        numeric_count = 0
+        for val in df[col]:
+            if clean_numeric_value(val) is not None:
+                numeric_count += 1
+        if numeric_count >= len(df) * 0.5:  # At least 50% numeric
+            return True
+    return False
+
+def get_numeric_columns(df):
+    """Get columns that contain numeric data."""
+    numeric_cols = []
+    for col in df.columns:
+        numeric_count = 0
+        for val in df[col]:
+            if clean_numeric_value(val) is not None:
+                numeric_count += 1
+        if numeric_count >= len(df) * 0.5:
+            numeric_cols.append(col)
+    return numeric_cols
+
+def get_label_column(df, numeric_cols):
+    """Get the best column to use as labels (non-numeric, first column)."""
+    for col in df.columns:
+        if col not in numeric_cols:
+            return col
+    return df.columns[0]
+
+def create_bar_chart(df):
+    """Create a bar chart from the DataFrame."""
+    numeric_cols = get_numeric_columns(df)
+    if not numeric_cols:
+        return None
+    
+    label_col = get_label_column(df, numeric_cols)
+    
+    # Clean numeric data
+    df_clean = df.copy()
+    for col in numeric_cols:
+        df_clean[col] = df_clean[col].apply(clean_numeric_value)
+    
+    fig = go.Figure()
+    
+    colors = px.colors.qualitative.Set2
+    for i, col in enumerate(numeric_cols):
+        fig.add_trace(go.Bar(
+            name=col,
+            x=df_clean[label_col],
+            y=df_clean[col],
+            marker_color=colors[i % len(colors)]
+        ))
+    
+    fig.update_layout(
+        title="Data Visualization",
+        xaxis_title=label_col,
+        yaxis_title="Value",
+        barmode='group',
+        template='plotly_white',
+        font=dict(family="Inter, sans-serif"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    return fig
+
+def create_line_chart(df):
+    """Create a line chart from the DataFrame."""
+    numeric_cols = get_numeric_columns(df)
+    if not numeric_cols:
+        return None
+    
+    label_col = get_label_column(df, numeric_cols)
+    
+    # Clean numeric data
+    df_clean = df.copy()
+    for col in numeric_cols:
+        df_clean[col] = df_clean[col].apply(clean_numeric_value)
+    
+    fig = go.Figure()
+    
+    colors = px.colors.qualitative.Set2
+    for i, col in enumerate(numeric_cols):
+        fig.add_trace(go.Scatter(
+            name=col,
+            x=df_clean[label_col],
+            y=df_clean[col],
+            mode='lines+markers',
+            line=dict(color=colors[i % len(colors)], width=2),
+            marker=dict(size=8)
+        ))
+    
+    fig.update_layout(
+        title="Trend Visualization",
+        xaxis_title=label_col,
+        yaxis_title="Value",
+        template='plotly_white',
+        font=dict(family="Inter, sans-serif"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    return fig
+
+def create_pie_chart(df):
+    """Create a pie chart from the DataFrame."""
+    numeric_cols = get_numeric_columns(df)
+    if not numeric_cols:
+        return None
+    
+    label_col = get_label_column(df, numeric_cols)
+    value_col = numeric_cols[0]  # Use first numeric column
+    
+    # Clean numeric data
+    df_clean = df.copy()
+    df_clean[value_col] = df_clean[value_col].apply(clean_numeric_value)
+    
+    fig = px.pie(
+        df_clean,
+        values=value_col,
+        names=label_col,
+        title="Distribution",
+        color_discrete_sequence=px.colors.qualitative.Set2
+    )
+    
+    fig.update_layout(
+        template='plotly_white',
+        font=dict(family="Inter, sans-serif")
+    )
+    
+    return fig
+
+def convert_df_to_csv(df):
+    """Convert DataFrame to CSV for download."""
+    return df.to_csv(index=False).encode('utf-8')
+
+
+Data Parsing and Visualization Helper Functions
+* clean_numeric_value(): Normalizes numeric values by removing currency symbols/commas so they can be used reliably in charts.
+* parse_table_from_text(): Attempts to extract structured tabular data from AI responses (JSON, markdown tables, or key-value text) and convert it into a Pandas DataFrame.
+* is_graphable(): Checks whether the extracted DataFrame contains enough numeric data to support visualization.
+* get_numeric_columns(): Identifies which DataFrame columns are mostly numeric and suitable for plotting.
+* get_label_column(): Selects the most appropriate non-numeric column to use as chart labels (e.g., names or dates).
+* create_bar_chart(): Builds an interactive grouped bar chart from the parsed DataFrame using Plotly.
+* create_line_chart(): Builds an interactive line chart to visualize trends in numeric data across labels.
+* create_pie_chart(): Builds a pie chart to show distribution using the first available numeric column.
+* convert_df_to_csv(): Converts the DataFrame into a downloadable CSV file for export from the interface.
+
+
+
+
+
+
+
+# ===== TYPEWRITER EFFECT =====
+def stream_data(text):
+    for word in text.split(" "):
+        yield word + " "
+        time.sleep(0.04)
+
+# ===== SIDEBAR =====
+with st.sidebar:
+    st.title("ERPGenie")
+    st.markdown("---")
+    st.markdown("### Status")
+    st.markdown(" **Online**")
+    st.markdown("Connected to: `n8n Webhook`")
+    
+    st.markdown("---")
+    show_debug = st.checkbox("Show Debug Info", value=False)
+    
+    st.markdown("---")
+    if st.button("Clear Chat", use_container_width=True):
+        st.session_state.messages = []
+        st.session_state.parsed_data = {}
+        st.rerun()
+
+# Webhook URL
+WEBHOOK_URL = "http://localhost:5678/webhook-test/a5fd8415-ce4c-4e62-860c-050437be9d1e"
+
+# Initialize State
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+    st.session_state.messages.append({"role": "assistant", "content": "Hello! I am ERPGenie. How can I assist you today?"})
+
+if "parsed_data" not in st.session_state:
+    st.session_state.parsed_data = {}
+
+
+Typewriter Effect Function
+This function streams the AI response word by word with a short delay to simulate a typing effect in the chat interface.
+
+Sidebar Interface
+This block defines the sidebar layout, displaying system status, webhook connection state, a debug toggle, and a button to clear the chat session.
+
+Webhook Configuration
+This line defines the local n8n webhook endpoint used to send user queries from the chatbot to the automation workflow.
+
+Session State Initialization
+This block initializes the chat history and parsed data storage using Streamlit session state to maintain conversation context across interactions.
+
+# ===== MAIN CHAT DISPLAY =====
+st.title("ERPGenie Chat")
+
+# Display Chat History with Visualization Options
+for idx, message in enumerate(st.session_state.messages):
+    with st.chat_message(message["role"], avatar="??" if message["role"] == "assistant" else "??"):
+        st.markdown(message["content"])
+        
+        # For assistant messages, check if data is graphable/exportable
+        if message["role"] == "assistant":
+            msg_key = f"msg_{idx}"
+            
+            # Parse data if not already cached
+            if msg_key not in st.session_state.parsed_data:
+                df = parse_table_from_text(message["content"])
+                st.session_state.parsed_data[msg_key] = df
+            
+            df = st.session_state.parsed_data.get(msg_key)
+            
+            if df is not None and not df.empty:
+                st.markdown("---")
+                
+                # Show action buttons
+                col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 2])
+                
+                with col1:
+                    if st.button("Bar Chart", key=f"bar_{idx}"):
+                        st.session_state[f"show_bar_{idx}"] = not st.session_state.get(f"show_bar_{idx}", False)
+                
+                with col2:
+                    if st.button("Line Chart", key=f"line_{idx}"):
+                        st.session_state[f"show_line_{idx}"] = not st.session_state.get(f"show_line_{idx}", False)
+                
+                with col3:
+                    if st.button("Pie Chart", key=f"pie_{idx}"):
+                        st.session_state[f"show_pie_{idx}"] = not st.session_state.get(f"show_pie_{idx}", False)
+                
+                with col4:
+                    csv_data = convert_df_to_csv(df)
+                    st.download_button(
+                        label="Export CSV",
+                        data=csv_data,
+                        file_name=f"erpgenie_data_{idx}.csv",
+                        mime="text/csv",
+                        key=f"csv_{idx}"
+                    )
+                
+                with col5:
+                    if st.button("Show Table", key=f"table_{idx}"):
+                        st.session_state[f"show_table_{idx}"] = not st.session_state.get(f"show_table_{idx}", False)
+                
+                # Display visualizations if toggled
+                if st.session_state.get(f"show_bar_{idx}", False):
+                    if is_graphable(df):
+                        fig = create_bar_chart(df)
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No numeric data available for bar chart.")
+                
+                if st.session_state.get(f"show_line_{idx}", False):
+                    if is_graphable(df):
+                        fig = create_line_chart(df)
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No numeric data available for line chart.")
+                
+                if st.session_state.get(f"show_pie_{idx}", False):
+                    if is_graphable(df):
+                        fig = create_pie_chart(df)
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No numeric data available for pie chart.")
+                
+                if st.session_state.get(f"show_table_{idx}", False):
+                    st.dataframe(df, use_container_width=True)
+
+Main Chat Display
+This block defines the main chat interface title and renders the conversation history stored in the session state.
+
+Chat Message Rendering
+This loop displays each user and assistant message with role-specific avatars and formatted content.
+
+Assistant Response Processing
+For assistant messages, this block attempts to parse structured data from the response and caches it for reuse.
+
+Action Buttons for Data Interaction
+This block displays buttons that allow the user to generate charts, export data to CSV, or view results as a table.
+
+Visualization Rendering
+This section conditionally renders bar, line, or pie charts based on user interaction and data suitability.
+
+Tabular Data Display
+This block displays the parsed DataFrame directly in the interface when the user chooses to view the table.
+
+# ===== CHAT INPUT & LOGIC =====
+if prompt := st.chat_input("Ask ERPGenie..."):
+    # Add user message to state
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Display user message immediately
+    with st.chat_message("user", avatar="??"):
+        st.markdown(prompt)
+    
+    #Assistant Response 
+    with st.chat_message("assistant", avatar="??"):
+        with st.spinner("Genie is thinking..."):
+            try:
+                # send to n8n webhook
+                payload = {"text": prompt} 
+                response = requests.post(WEBHOOK_URL, json=payload, timeout=30)
+                
+                # debyg
+                if show_debug:
+                    st.json(response.json() if response.status_code == 200 else {"error": response.status_code, "text": response.text})
+
+                if response.status_code == 200:
+                    try:
+                        data = response.json()
+                        ai_response = data.get("output", data.get("text", data.get("response", str(data))))
+                        if isinstance(ai_response, (dict, list)):
+                             ai_response = json.dumps(ai_response, indent=2)
+                    except json.JSONDecodeError:
+                        ai_response = response.text
+                    
+                    st.write_stream(stream_data(ai_response))
+                    st.session_state.messages.append({"role": "assistant", "content": ai_response})
+                    
+                    # cache data for visualization
+                    msg_idx = len(st.session_state.messages) - 1
+                    msg_key = f"msg_{msg_idx}"
+                    df = parse_table_from_text(ai_response)
+                    st.session_state.parsed_data[msg_key] = df
+                    
+                    # show visualization options if data accepts
+                    if df is not None and not df.empty:
+                        st.markdown("---")
+                        st.success(" **Data detected!** Use the buttons above after refresh to visualize or export.")
+                        st.rerun()
+                    
+                else:
+                    error_msg = f"rrror: webhook returned status {response.status_code}"
+                    st.error(error_msg)
+                    st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                    
+            except requests.exceptions.ConnectionError:
+                error_msg = "Error: Could not connect to n8n webhook. Is it running?"
+                st.error(error_msg)
+                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+            except Exception as e:
+                error_msg = f"Error: {str(e)}"
+                st.error(error_msg)
+                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+
+
+Chat Input Trigger
+This block captures a new user message from the Streamlit chat input and starts the request-processing cycle.
+
+Store and Display User Message
+This section appends the user message to session history and renders it immediately in the chat UI.
+
+Send Request to n8n Webhook
+This block packages the user prompt into a JSON payload and sends it to the configured n8n webhook using an HTTP POST request.
+
+Debug Output 
+This section conditionally displays the raw webhook response in JSON form when debug mode is enabled.
+
+Parse Webhook Response
+This block extracts the assistant reply from the returned JSON (e.g., output / text / response) and formats it if the response is structured.
+
+Display and Save Assistant Response
+This section streams the assistant reply to the UI and stores it in the chat history for persistence.
+
+Cache Data for Visualization
+This block attempts to parse tabular data from the AI response and stores it for chart/table rendering
+
+Refresh UI When Data is Detected
+This part triggers a rerun when structured data is detected so visualization/export options can be applied cleanly.
+
+Error Handling
+This section handles connection failures, non-200 webhook responses, and general exceptions by showing clear error messages and logging them into the chat history.
+
+
+
+n8n Workflows source code
+n8n workflows are internally stored as structured JSON files, which allows the complete workflow logic to be exported, documented and imported across environments for productivity and version control.
+
+
+
+Figure 70 - n8n workflow download
+
+
+Figure 71 - n8n workflow import
+
+
+
+Figure 72 - n8n workflow import 2
+
+
+
+Figure 73 - n8n workflow imported
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AI chatbot workflow source code:
+{
+  "name": "AI-chatbot (MCP/python)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a5fd8415-ce4c-4e62-860c-050437be9d1e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        48
+      ],
+      "id": "9cf0e192-8662-4235-8fc4-f542e0f2d7d5",
+      "name": "Webhook",
+      "webhookId": "a5fd8415-ce4c-4e62-860c-050437be9d1e"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -64,
+        48
+      ],
+      "id": "fa47bae3-3ef9-4ca6-b753-2eb1977ee6c5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        272
+      ],
+      "id": "36565ecd-722b-40b6-9449-b7b627a2eb3d",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        256
+      ],
+      "id": "4340a358-047d-4711-a4ad-51e2beabcf63",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "36NssXIdtJDdXrg1",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        48
+      ],
+      "id": "b746b846-d116-43cb-ba6d-9140acff3867",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "Workflow initiated by invoking the chat interface",
+        "height": 240,
+        "width": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -32
+      ],
+      "id": "12f115b7-60a3-4ad6-8554-5d045c781cd7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Goes through the AI Agent and chooses the tool in the MCP server based on the user query by the LLM",
+        "height": 432,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -32
+      ],
+      "id": "dec8843b-f003-40dc-956e-15f007ab57d5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Returns the output in the interface",
+        "height": 240,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -32
+      ],
+      "id": "1a733746-7bfd-41c0-a995-c8fb35afbdf4",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d2dd4a29-4e06-4902-a4d4-758fff50000d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f99673a6157a482ab5363267ed0054492ca2e715028a79e9cef328006f59e3f"
+  },
+  "id": "ZsIKQDKUcr5cvZjw",
+  "tags": []
+}
+
+
+Automated CRM lead capturing workflow source code:
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1376,
+        304
+      ],
+      "id": "d40d8c16-e0a9-4e45-9fef-96f193507dde",
+      "name": "OpenAI Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Jwp0LCLvLts3RUML",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "fileName": "logs.zip"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        352
+      ],
+      "id": "13ffecb6-cc3e-4da8-b4e8-7302f486f3b1",
+      "name": "Archive Logs"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7eaca59e-40b5-459f-b355-a073fd2ec803",
+              "leftValue": "={{ JSON.parse($json.text).opportunity }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1024,
+        96
+      ],
+      "id": "35c2cba1-c805-49ce-8bfa-05149a4a714e",
+      "name": "If its opportunity"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8be84690-57d7-4905-a2fc-510763d696d9",
+              "leftValue": "={{ $json.content[0].text.records[0].email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -592,
+        80
+      ],
+      "id": "1f98b65a-a77c-4b0d-8583-d63118c8fdea",
+      "name": "If contact doesn't exists"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        432
+      ],
+      "id": "7cafb437-d955-4c8c-a05a-d53eda3850f3",
+      "name": "OpenAI Model (4.1 mini)",
+      "credentials": {
+        "openAiApi": {
+          "id": "Jwp0LCLvLts3RUML",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI that classifies emails for sales opportunities.\n\nINPUT EMAIL SUBJECT:\n{{ $json.subject }}\n\nINPUT EMAIL content:\n{{ $json.textPlain }}\nTASK:\nReturn ONLY valid JSON like this:\n{\n  \"opportunity\": true/false,\n  \"contact\": { \"name\": \"string\", \"email\": \"string\", \"company\": \"string\" },\n  \"opportunity_details\": \"string\"\n}\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1328,
+        96
+      ],
+      "id": "81c9c3ae-15d5-4663-b7cd-ad2cc5c9510a",
+      "name": "LLM E-mail filtering"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -1760,
+        96
+      ],
+      "id": "6d3fa0c3-17c3-4adb-a841-2860ec5deb9a",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "A0PMWhbAo6stRPuC",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "search_records",
+          "mode": "list",
+          "cachedResultName": "search_records"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "model": "res.partner",
+            "domain": "=[[\"email\",\"=\",\"{{ $('Email Trigger (IMAP)').item.json.metadata['return-path'].slice(1, -1) }}\"]]",
+            "fields": "[\"email\"]"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "model",
+              "displayName": "model",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "domain",
+              "displayName": "domain",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  []\n]",
+              "removed": false
+            },
+            {
+              "id": "fields",
+              "displayName": "fields",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": false
+            },
+            {
+              "id": "limit",
+              "displayName": "limit",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "offset",
+              "displayName": "offset",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "order",
+              "displayName": "order",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        80
+      ],
+      "id": "20f732b8-e211-495a-892d-98b6ac323c0d",
+      "name": "MCP Client1"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "create_record",
+          "mode": "list",
+          "cachedResultName": "create_record"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "model": "res.partner",
+            "values": "={\n  \"values\": {\n    \"name\": \"{{ $('Email Trigger (IMAP)').item.json.from }}\",\n    \"email\": \"{{ $('Email Trigger (IMAP)').item.json.metadata['return-path'].slice(1, -1) }}\",\n    \"company_type\": \"company\",\n    \"customer_rank\": 1\n  }\n}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "model",
+              "displayName": "model",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "values",
+              "displayName": "values",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "object",
+              "defaultValue": "{}",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "1d617340-cdc8-442f-a8c2-9241e647bf1f",
+      "name": "MCP Client2"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "create_record",
+          "mode": "list",
+          "cachedResultName": "create_record"
+        },
+        "inputMode": "json",
+        "jsonInput": "={{$json}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        288
+      ],
+      "id": "f534f71e-3fb0-4ee5-a2a2-03cf72ba2126",
+      "name": "MCP Client3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const email = $node[\"Email Trigger (IMAP)\"]?.json ?? {};\n\nconst subject = email.subject ?? \"New Opportunity\";\nconst description = email.textPlain ?? \"\";\n\n// adjust this path if your partner lookup node is different\nconst rec = $json?.content?.[0]?.text?.records?.[0] ?? {};\n\nconst partnerId = Number(rec.id);\nconst emailFrom = (rec.email ?? \"\").toString();\n\nconst values = {\n  name: subject,\n  type: \"opportunity\",\n  email_from: emailFrom,\n  description,\n};\n\n// only include partner_id if it's a valid number\nif (Number.isFinite(partnerId)) values.partner_id = partnerId;\n\nreturn [\n  {\n    json: {\n      model: \"crm.lead\",\n      values,\n      tool: \"create_record\",\n      id: \"toolu_01CZ9yoU4XgywRT9LU9joQgy\",\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        288
+      ],
+      "id": "fcc8889b-7958-4492-b7a7-df3f27ec5c5a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=inform the user about an opportunity with an id of : {{ $json.content[0].text.id }}  details about opportunity : from : {{ $('Email Trigger (IMAP)').item.json.metadata['return-path'] }} subject:{{ $('Email Trigger (IMAP)').item.json.subject }} content:{{ $('Email Trigger (IMAP)').item.json.textPlain }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        48,
+        224
+      ],
+      "id": "d8537c0e-750f-4a8c-bf04-2896b335f3d6",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "fromEmail": "professorhashim4@gmail.com",
+        "toEmail": "professorhashim4@gmail.com",
+        "subject": "test",
+        "emailFormat": "text",
+        "text": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        224
+      ],
+      "id": "13d2f868-8eea-4d2a-be76-ef659254c09e",
+      "name": "Send email",
+      "webhookId": "a991c507-97d0-43b3-b920-84599794347b",
+      "credentials": {
+        "smtp": {
+          "id": "8nbKtjkS5ZmCp99q",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LLM E-mail filtering",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If its opportunity": {
+      "main": [
+        [
+          {
+            "node": "MCP Client1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archive Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If contact doesn't exists": {
+      "main": [
+        [
+          {
+            "node": "MCP Client2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model (4.1 mini)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM E-mail filtering": {
+      "main": [
+        [
+          {
+            "node": "If its opportunity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "LLM E-mail filtering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client1": {
+      "main": [
+        [
+          {
+            "node": "If contact doesn't exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "MCP Client3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "526ffc4b-32cd-4e6b-b8dc-8d7d319d5241",
+  "meta": {
+    "instanceId": "5f99673a6157a482ab5363267ed0054492ca2e715028a79e9cef328006f59e3f"
+  },
+  "id": "Zb16qghJNJxOBPSX",
+  "tags": []
+}
+
+1
+
+

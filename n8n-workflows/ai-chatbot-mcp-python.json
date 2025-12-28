@@ -1,0 +1,200 @@
+{
+  "name": "AI-chatbot (MCP/python)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a5fd8415-ce4c-4e62-860c-050437be9d1e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        48
+      ],
+      "id": "9cf0e192-8662-4235-8fc4-f542e0f2d7d5",
+      "name": "Webhook",
+      "webhookId": "a5fd8415-ce4c-4e62-860c-050437be9d1e"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -64,
+        48
+      ],
+      "id": "fa47bae3-3ef9-4ca6-b753-2eb1977ee6c5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        272
+      ],
+      "id": "36565ecd-722b-40b6-9449-b7b627a2eb3d",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        256
+      ],
+      "id": "4340a358-047d-4711-a4ad-51e2beabcf63",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "36NssXIdtJDdXrg1",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        48
+      ],
+      "id": "b746b846-d116-43cb-ba6d-9140acff3867",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "Workflow initiated by invoking the chat interface",
+        "height": 240,
+        "width": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -32
+      ],
+      "id": "12f115b7-60a3-4ad6-8554-5d045c781cd7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Goes through the AI Agent and chooses the tool in the MCP server based on the user query by the LLM",
+        "height": 432,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -32
+      ],
+      "id": "dec8843b-f003-40dc-956e-15f007ab57d5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Returns the output in the interface",
+        "height": 240,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -32
+      ],
+      "id": "1a733746-7bfd-41c0-a995-c8fb35afbdf4",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d2dd4a29-4e06-4902-a4d4-758fff50000d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f99673a6157a482ab5363267ed0054492ca2e715028a79e9cef328006f59e3f"
+  },
+  "id": "ZsIKQDKUcr5cvZjw",
+  "tags": []
+}

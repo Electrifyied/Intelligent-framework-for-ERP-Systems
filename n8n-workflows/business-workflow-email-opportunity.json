@@ -1,0 +1,533 @@
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1376,
+        304
+      ],
+      "id": "d40d8c16-e0a9-4e45-9fef-96f193507dde",
+      "name": "OpenAI Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Jwp0LCLvLts3RUML",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "compress",
+        "fileName": "logs.zip"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        352
+      ],
+      "id": "13ffecb6-cc3e-4da8-b4e8-7302f486f3b1",
+      "name": "Archive Logs"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7eaca59e-40b5-459f-b355-a073fd2ec803",
+              "leftValue": "={{ JSON.parse($json.text).opportunity }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1024,
+        96
+      ],
+      "id": "35c2cba1-c805-49ce-8bfa-05149a4a714e",
+      "name": "If its opportunity"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8be84690-57d7-4905-a2fc-510763d696d9",
+              "leftValue": "={{ $json.content[0].text.records[0].email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -592,
+        80
+      ],
+      "id": "1f98b65a-a77c-4b0d-8583-d63118c8fdea",
+      "name": "If contact doesn't exists"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        432
+      ],
+      "id": "7cafb437-d955-4c8c-a05a-d53eda3850f3",
+      "name": "OpenAI Model (4.1 mini)",
+      "credentials": {
+        "openAiApi": {
+          "id": "Jwp0LCLvLts3RUML",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI that classifies emails for sales opportunities.\n\nINPUT EMAIL SUBJECT:\n{{ $json.subject }}\n\nINPUT EMAIL content:\n{{ $json.textPlain }}\nTASK:\nReturn ONLY valid JSON like this:\n{\n  \"opportunity\": true/false,\n  \"contact\": { \"name\": \"string\", \"email\": \"string\", \"company\": \"string\" },\n  \"opportunity_details\": \"string\"\n}\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1328,
+        96
+      ],
+      "id": "81c9c3ae-15d5-4663-b7cd-ad2cc5c9510a",
+      "name": "LLM E-mail filtering"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -1760,
+        96
+      ],
+      "id": "6d3fa0c3-17c3-4adb-a841-2860ec5deb9a",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "A0PMWhbAo6stRPuC",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "search_records",
+          "mode": "list",
+          "cachedResultName": "search_records"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "model": "res.partner",
+            "domain": "=[[\"email\",\"=\",\"{{ $('Email Trigger (IMAP)').item.json.metadata['return-path'].slice(1, -1) }}\"]]",
+            "fields": "[\"email\"]"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "model",
+              "displayName": "model",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "domain",
+              "displayName": "domain",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  []\n]",
+              "removed": false
+            },
+            {
+              "id": "fields",
+              "displayName": "fields",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": false
+            },
+            {
+              "id": "limit",
+              "displayName": "limit",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "offset",
+              "displayName": "offset",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "order",
+              "displayName": "order",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        80
+      ],
+      "id": "20f732b8-e211-495a-892d-98b6ac323c0d",
+      "name": "MCP Client1"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "create_record",
+          "mode": "list",
+          "cachedResultName": "create_record"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "model": "res.partner",
+            "values": "={\n  \"values\": {\n    \"name\": \"{{ $('Email Trigger (IMAP)').item.json.from }}\",\n    \"email\": \"{{ $('Email Trigger (IMAP)').item.json.metadata['return-path'].slice(1, -1) }}\",\n    \"company_type\": \"company\",\n    \"customer_rank\": 1\n  }\n}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "model",
+              "displayName": "model",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "values",
+              "displayName": "values",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "object",
+              "defaultValue": "{}",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "1d617340-cdc8-442f-a8c2-9241e647bf1f",
+      "name": "MCP Client2"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:8000/",
+        "tool": {
+          "__rl": true,
+          "value": "create_record",
+          "mode": "list",
+          "cachedResultName": "create_record"
+        },
+        "inputMode": "json",
+        "jsonInput": "={{$json}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        288
+      ],
+      "id": "f534f71e-3fb0-4ee5-a2a2-03cf72ba2126",
+      "name": "MCP Client3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const email = $node[\"Email Trigger (IMAP)\"]?.json ?? {};\n\nconst subject = email.subject ?? \"New Opportunity\";\nconst description = email.textPlain ?? \"\";\n\n// adjust this path if your partner lookup node is different\nconst rec = $json?.content?.[0]?.text?.records?.[0] ?? {};\n\nconst partnerId = Number(rec.id);\nconst emailFrom = (rec.email ?? \"\").toString();\n\nconst values = {\n  name: subject,\n  type: \"opportunity\",\n  email_from: emailFrom,\n  description,\n};\n\n// only include partner_id if it's a valid number\nif (Number.isFinite(partnerId)) values.partner_id = partnerId;\n\nreturn [\n  {\n    json: {\n      model: \"crm.lead\",\n      values,\n      tool: \"create_record\",\n      id: \"toolu_01CZ9yoU4XgywRT9LU9joQgy\",\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        288
+      ],
+      "id": "fcc8889b-7958-4492-b7a7-df3f27ec5c5a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=inform the user about an opportunity with an id of : {{ $json.content[0].text.id }}  details about opportunity : from : {{ $('Email Trigger (IMAP)').item.json.metadata['return-path'] }} subject:{{ $('Email Trigger (IMAP)').item.json.subject }} content:{{ $('Email Trigger (IMAP)').item.json.textPlain }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        48,
+        224
+      ],
+      "id": "d8537c0e-750f-4a8c-bf04-2896b335f3d6",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "fromEmail": "professorhashim4@gmail.com",
+        "toEmail": "professorhashim4@gmail.com",
+        "subject": "test",
+        "emailFormat": "text",
+        "text": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        224
+      ],
+      "id": "13d2f868-8eea-4d2a-be76-ef659254c09e",
+      "name": "Send email",
+      "webhookId": "a991c507-97d0-43b3-b920-84599794347b",
+      "credentials": {
+        "smtp": {
+          "id": "8nbKtjkS5ZmCp99q",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LLM E-mail filtering",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If its opportunity": {
+      "main": [
+        [
+          {
+            "node": "MCP Client1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archive Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If contact doesn't exists": {
+      "main": [
+        [
+          {
+            "node": "MCP Client2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model (4.1 mini)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM E-mail filtering": {
+      "main": [
+        [
+          {
+            "node": "If its opportunity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "LLM E-mail filtering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client1": {
+      "main": [
+        [
+          {
+            "node": "If contact doesn't exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "MCP Client3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "526ffc4b-32cd-4e6b-b8dc-8d7d319d5241",
+  "meta": {
+    "instanceId": "5f99673a6157a482ab5363267ed0054492ca2e715028a79e9cef328006f59e3f"
+  },
+  "id": "Zb16qghJNJxOBPSX",
+  "tags": []
+}
