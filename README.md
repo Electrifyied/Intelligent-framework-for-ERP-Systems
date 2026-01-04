@@ -1,36 +1,71 @@
-﻿# Intelligent Framework for ERP Systems
+# Intelligent Framework for ERP Systems
 
-This repository contains the project deliverables for an "Intelligent framework for ERP Systems" thesis. The solution combines an Odoo Community Edition ERP stack with automation (n8n), AI-assisted operations via MCP, and a Streamlit front-end (ERPGenie) for natural-language interaction and data visualization.
+This repository contains the project deliverables for the thesis "Intelligent Framework for ERP Systems". The system combines Odoo Community Edition (ERP), a Model Context Protocol (MCP) server for controlled AI access, n8n automation workflows, and a Streamlit front end (ERPGenie).
 
-Highlights
-- Modular ERP stack split across VMs: Odoo app, PostgreSQL DB, automation/AI layer.
-- n8n workflows for AI chatbot routing, DB chat, health checks, and CRM lead capture automation.
-- Streamlit UI (ERPGenie) that talks to n8n webhooks and adds charts/tables.
+## Project Summary
+- Odoo Community Edition and PostgreSQL provide core ERP data.
+- An MCP server exposes safe AI tools for Odoo operations.
+- n8n orchestrates AI agents, integrations, and automation workflows.
+- ERPGenie offers natural-language chat with charts and tabular output.
 
-Repo layout
-- `streamlit-app/` Streamlit UI (`app.py`) and theme config.
-- `n8n-workflows/` Exported n8n workflow JSON files.
+## System Diagrams
+### Use Case Diagram
+![Use Case Diagram](system-diagrams/usecase-diagram.png)
+
+### Deployment Diagram
+![Deployment Diagram](system-diagrams/deployment-diagram.png)
+
+### Sequence Diagram (Chat Flow)
+![Sequence Diagram (Chat Flow)](system-diagrams/sequence-diagram.png)
+
+### Sequence Diagram (Automation Flow)
+![Sequence Diagram (Automation Flow)](system-diagrams/sequence-diagram2.png)
+
+## Repository Structure
+- `streamlit-app/` Streamlit UI for ERPGenie (`app.py`).
+- `n8n-workflows/` Exported workflow definitions for n8n.
+- `odoo-mcp-server/` MCP server implementation and Docker assets.
+- `system-diagrams/` Architecture and sequence diagrams.
 - `docs/thesis/` Thesis documents (DOCX and TXT).
+- `requirements.txt` Python dependencies for the Streamlit UI.
 
-Prerequisites
+## Components
+### ERPGenie Streamlit UI
+- Chat interface that sends prompts to an n8n webhook.
+- Parses tabular responses and offers charts and CSV export.
+- Main entry point: `streamlit-app/app.py`.
+
+### n8n Workflows
+- `ai-chatbot-mcp-python.json`: Webhook-driven AI agent that routes requests to the MCP server.
+- `chat-with-postgresql-database.json`: AI agent for PostgreSQL Q and A and reporting.
+- `health-check-automated.json`: Scheduled health check against the Odoo web health endpoint.
+- `business-workflow-email-opportunity.json`: CRM-related automation workflow for email and opportunity handling.
+
+### Odoo MCP Server
+- Located in `odoo-mcp-server/`.
+- Provides HTTP and stdio MCP transports with Odoo CRUD tooling.
+- Setup and usage details are in `odoo-mcp-server/README.md`.
+
+## Prerequisites
 - Python 3.10+ for the Streamlit UI.
-- n8n (Docker or local install).
+- n8n (Docker or local installation).
 - Odoo Community Edition and PostgreSQL (not included).
-- MCP server for controlled ERP/DB access (not included).
+- MCP server credentials for Odoo (see `odoo-mcp-server/README.md`).
 
-Quick start (Streamlit UI)
+## Quick Start (ERPGenie Streamlit UI)
 1. `pip install -r requirements.txt`
-2. Edit `streamlit-app/app.py` and set `WEBHOOK_URL` to your n8n webhook.
-3. Run `streamlit run streamlit-app/app.py`
+2. Update `WEBHOOK_URL` in `streamlit-app/app.py` to point at your n8n webhook.
+3. `streamlit run streamlit-app/app.py`
 
-Using the n8n workflows
-1. Import workflows from `n8n-workflows/*.json` into n8n.
-2. Configure credentials for OpenAI/Anthropic, Postgres, IMAP/SMTP as needed.
-3. Update URLs in the workflow nodes for your local IPs/ports (Odoo health, MCP endpoint, etc.).
+## Using the n8n Workflows
+1. Import `n8n-workflows/*.json` into n8n.
+2. Configure credentials for OpenAI or Anthropic, PostgreSQL, IMAP or SMTP, and any other connected services.
+3. Update URLs, ports, and hostnames inside workflow nodes for your environment (Odoo health endpoint, MCP server, databases).
 
-Notes
+## Notes
 - Workflow exports include credential references by ID; replace them with your own in n8n.
-- Cloudflare Tunnel and VM configuration are documented in the thesis, not included in this repo.
+- Infrastructure details such as Cloudflare Tunnel and VM topology are documented in the thesis.
 
-License
-- No license specified yet. Add one if you plan to distribute or reuse this code.
+## License
+- This repository does not define a top-level license.
+- The `odoo-mcp-server/` subproject includes its own MIT license.
